@@ -17,6 +17,7 @@ public class Calculator {
                 is_correct = first_correct(mainexample);
             }
         }
+        System.out.println("qwe");
         sc.close();
         mainexample = add_multiply(mainexample);
         int x , y;
