@@ -16,14 +16,15 @@ public class Calc {
         }
         sc.close();
         mainexample = add_multiply(mainexample);
+        System.out.println(mainexample);
     }
     static boolean first_correct(String s) {
         if (s.charAt(s.length()-1) == '-' || s.charAt(s.length()-1) == '+' ||s.charAt(s.length()-1) == '/' ||
-                s.charAt(s.length()-1) == '*' ||s.charAt(s.length()-1) == '(') {
+                s.charAt(s.length()-1) == '*' || s.charAt(s.length()-1) == '(' || s.charAt(s.length()-1) == '.') {
             return false;
         }
         if (Character.isDigit(s.charAt(0)) || s.charAt(0) == '-' || s.charAt(0) == '(' || s.charAt(0) == '+') {
-            if (check_brackets(s) && check_symbol(s) && checkSigns(s)) {
+            if (check_brackets(s) && check_symbol(s) && checkSigns(s) && checkDots(s)) {
                 return true;
             } else {
                 return false;
@@ -31,6 +32,24 @@ public class Calc {
         } else {
             return false;
         }
+    }
+    static boolean checkDots(String s) {
+        s = s.replaceAll("[-+*()/]", " ").replaceAll("[\\s]{2,}", " ");
+        String[] d = s.split(" ");
+        int x = 0;
+        for (int i = 0; i < d.length; i++) {
+            for (int j = 0; j < d[i].length(); j++) {
+                if (d[i].charAt(0) == '.')
+                    return false;
+                if (d[i].charAt(j) == '.') {
+                    x++;
+                }
+                if (x > 1)
+                    return false;
+            }
+            x = 0;
+        }
+        return true;
     }
     static boolean check_brackets(String s) {
         int x = 0;
@@ -58,7 +77,7 @@ public class Calc {
         int x = 0;
         for (int i = 0; i < s.length(); i++) {
             if (Character.isDigit(s.charAt(i)) || s.charAt(i) == '-' || s.charAt(i) == '+' || s.charAt(i) == '/'
-            || s.charAt(i) == '*' || s.charAt(i) == '(' || s.charAt(i) == ')') {
+            || s.charAt(i) == '*' || s.charAt(i) == '(' || s.charAt(i) == ')' || s.charAt(i) == '.') {
                 x++;
             }
         }
@@ -97,4 +116,3 @@ public class Calc {
         return s;
     }
 }
-//add 0

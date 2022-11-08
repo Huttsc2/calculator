@@ -6,20 +6,19 @@ public class Calculator {
         String example;
         String temp;
         String count;
-        boolean is_correct = false;
+        boolean isCorrect = false;
         Scanner sc = new Scanner(System.in);
         System.out.println("Enter your example");
-        while (!is_correct) {
+        while (!isCorrect) {
             mainexample = sc.nextLine().replaceAll(" ", "");
-            is_correct = first_correct(mainexample);
-            if (!is_correct) {
+            isCorrect = firstCorrect(mainexample);
+            if (!isCorrect) {
                 System.out.println("incorrect example, try again");
-                is_correct = first_correct(mainexample);
+                isCorrect = firstCorrect(mainexample);
             }
         }
-        System.out.println("qwe");
         sc.close();
-        mainexample = add_multiply(mainexample);
+        mainexample = addMultiply(mainexample);
         int x , y;
         System.out.println(mainexample);
         while (isHasBracketsWithNoSingleNumber(mainexample)) {
@@ -418,13 +417,13 @@ public class Calculator {
         }
         return s;
     }
-    static boolean first_correct(String s) {
+    static boolean firstCorrect(String s) {
         if (s.charAt(s.length()-1) == '-' || s.charAt(s.length()-1) == '+' ||s.charAt(s.length()-1) == '/' ||
                 s.charAt(s.length()-1) == '*' ||s.charAt(s.length()-1) == '(') {
             return false;
         }
         if (Character.isDigit(s.charAt(0)) || s.charAt(0) == '-' || s.charAt(0) == '(' || s.charAt(0) == '+') {
-            if (check_brackets(s) && check_symbol(s) && checkSigns(s)) {
+            if (checkBrackets(s) && checkSymbol(s) && checkSigns(s)) {
                 return true;
             } else {
                 return false;
@@ -433,7 +432,7 @@ public class Calculator {
             return false;
         }
     }
-    static boolean check_brackets(String s) {
+    static boolean checkBrackets(String s) {
         int x = 0;
         boolean is_first_right_bracket = false;
         for (int i = 0; i < s.length(); i++) {
@@ -455,7 +454,7 @@ public class Calculator {
             return false;
         }
     }
-    static boolean check_symbol(String s) {
+    static boolean checkSymbol(String s) {
         int x = 0;
         for (int i = 0; i < s.length(); i++) {
             if (Character.isDigit(s.charAt(i)) || s.charAt(i) == '-' || s.charAt(i) == '+' || s.charAt(i) == '/'
@@ -479,7 +478,7 @@ public class Calculator {
         }
         return true;
     }
-    static String add_multiply(String s) {
+    static String addMultiply(String s) {
         StringBuffer ns = new StringBuffer(s);
         for (int i = 1; i < s.length(); i++) {
             if (s.charAt(i) == '(' && (Character.isDigit(s.charAt(i-1)) || s.charAt(i-1) == ')')) {
