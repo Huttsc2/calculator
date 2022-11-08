@@ -419,11 +419,10 @@ public class Calculator {
     }
     static boolean firstCorrect(String s) {
         if (s.charAt(s.length()-1) == '-' || s.charAt(s.length()-1) == '+' ||s.charAt(s.length()-1) == '/' ||
-                s.charAt(s.length()-1) == '*' ||s.charAt(s.length()-1) == '(') {
+                s.charAt(s.length()-1) == '*' ||s.charAt(s.length()-1) == '(' || s.charAt(s.length()-1) == '.')
             return false;
-        }
         if (Character.isDigit(s.charAt(0)) || s.charAt(0) == '-' || s.charAt(0) == '(' || s.charAt(0) == '+') {
-            if (checkBrackets(s) && checkSymbol(s) && checkSigns(s)) {
+            if (checkBrackets(s) && checkSymbol(s) && checkSigns(s) && checkDots(s)) {
                 return true;
             } else {
                 return false;
@@ -458,9 +457,8 @@ public class Calculator {
         int x = 0;
         for (int i = 0; i < s.length(); i++) {
             if (Character.isDigit(s.charAt(i)) || s.charAt(i) == '-' || s.charAt(i) == '+' || s.charAt(i) == '/'
-                    || s.charAt(i) == '*' || s.charAt(i) == '(' || s.charAt(i) == ')') {
+                    || s.charAt(i) == '*' || s.charAt(i) == '(' || s.charAt(i) == ')' || s.charAt(i) == '.')
                 x++;
-            }
         }
         if (x == s.length()) {
             return true;
@@ -495,5 +493,23 @@ public class Calculator {
             }
         s = ns.toString();
         return s;
+    }
+    static boolean checkDots(String s) {
+        s = s.replaceAll("[-+*()/]", " ").replaceAll("[\\s]{2,}", " ");
+        String[] d = s.split(" ");
+        int x = 0;
+        for (int i = 0; i < d.length; i++) {
+            for (int j = 0; j < d[i].length(); j++) {
+                if (d[i].charAt(0) == '.')
+                    return false;
+                if (d[i].charAt(j) == '.') {
+                    x++;
+                }
+                if (x > 1)
+                    return false;
+            }
+            x = 0;
+        }
+        return true;
     }
 }
