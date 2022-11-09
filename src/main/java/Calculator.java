@@ -2,95 +2,117 @@ import java.util.Scanner;
 
 public class Calculator {
     public static void main(String[] args) {
-        String mainexample = null;
         String example;
+        example = checkExample();
+        example = countBrackets(example);
+        example = openBrackets(example);
+        example = countMilDiv(example);
+        example = countMinBrackets(example);
+        countFinalExample(example);
+    }
+    static String countFinalExample(String s) {
+        String temp, count;
+        while (!checkInfinity(s) && isHasMoreThanSingleNumber(s)) {
+            temp = localExample(s);
+            count = countTemp(temp);
+            s = s.substring(0, localStart(s)) + count +
+                    s.substring(localEnd(s));
+            System.out.println(s);
+        }
+        return s;
+    }
+    static String countMinBrackets(String s) {
         String temp;
-        String count;
+        while (!checkInfinity(s) && isHasBrackets(s)) {
+            temp = localExampleInBrackets(s);
+            if (startBrackets(s) == 0) {
+                s = temp + s.substring(endBrackets(s) + 1);
+            } else if (s.charAt(startBrackets(s)-1) == '-') {
+                s = s.substring(0, startBrackets(s)-1) + '+' +
+                        temp.substring(1) + s.substring(endBrackets(s)+1);
+            } else if (s.charAt(startBrackets(s)-1) == '+') {
+                s = s.substring(0, startBrackets(s)-1) + temp +
+                        s.substring(endBrackets(s)+1);
+            }
+            System.out.println(s);
+        }
+        return s;
+    }
+    static String countMilDiv(String s) {
+        String temp, count;
+        int x, y;
+        while (!checkInfinity(s) && (localMultiply(s) || localDivide(s))) {
+            temp = localExampleIncludingBrackets(s);
+            count = countTemp(temp);
+            if (Double.parseDouble(count) < 0)
+                count = '(' + count + ')';
+            if (s.charAt(localMultiplyOrDivideSign(s)-1) == ')') {
+                x = localStartIncludingBrackets(s)-1;
+            } else {
+                x = localStart(s);
+            }
+            if (s.charAt(localMultiplyOrDivideSign(s)+1) == '(') {
+                y = localEndIncludingBrackets(s)+1;
+            } else {
+                y = localEnd(s);
+            }
+            s = s.substring(0, x) + count + s.substring(y);
+        }
+        return s;
+    }
+    static String openBrackets(String s) {
+        while (!checkInfinity(s) && isHasPlusNumbersInBrackets(s)) {
+            s = openPlusSingleNumbersBrackets(s);
+            System.out.println(s);
+        }
+        return s;
+    }
+    static String checkExample() {
+        String s = null;
         boolean isCorrect = false;
         Scanner sc = new Scanner(System.in);
         System.out.println("Enter your example");
         while (!isCorrect) {
-            mainexample = sc.nextLine().replaceAll(" ", "");
-            isCorrect = firstCorrect(mainexample);
+            s = sc.nextLine().replaceAll(" ", "");
+            isCorrect = firstCorrect(s);
             if (!isCorrect) {
                 System.out.println("incorrect example, try again");
-                isCorrect = firstCorrect(mainexample);
+                isCorrect = firstCorrect(s);
             }
         }
         sc.close();
-        mainexample = addMultiply(mainexample);
-        int x , y;
-        System.out.println(mainexample);
-        temp = localExampleInBrackets(mainexample);
-        System.out.println(temp);
-        while (!checkInfinity(mainexample) && isHasBracketsWithNoSingleNumber(mainexample)) {
-            example = mainexample;
+        s = addMultiply(s);
+        System.out.println(s);
+        return s;
+    }
+    static String countBrackets(String s) {
+        String example;
+        String temp;
+        String count;
+        int x;
+        while (!checkInfinity(s) && isHasBracketsWithNoSingleNumber(s)) {
+            example = s;
             temp = localExampleInBrackets(example);
             example = example.substring(endBrackets(example) + 1);
             while (!isHasMoreThanSingleNumber(temp)) {
                 temp = localExampleInBrackets(example);
                 example = example.substring(endBrackets(example) + 1);
             }
-            if (!checkInfinity(mainexample) && isHasMoreThanTwoNumbers(temp)) {
+            if (!checkInfinity(s) && isHasMoreThanTwoNumbers(temp)) {
                 x = temp.length()+1;
                 temp = temp.substring(0, localStart(temp)) + countTemp(localExample(temp)) +
                         temp.substring(localEnd(temp));
-                mainexample = mainexample.substring(0, mainexample.length()-example.length()-x) +
-                        temp + mainexample.substring(mainexample.length()-example.length()-1);
-                System.out.println(mainexample);
+                s = s.substring(0, s.length()-example.length()-x) +
+                        temp + s.substring(s.length()-example.length()-1);
+                System.out.println(s);
                 continue;
             }
             count = countTemp(temp);
-            mainexample = mainexample.substring(0, mainexample.length()-example.length()-temp.length()-1) +
-                    count + mainexample.substring(mainexample.length()-example.length()-1);
-            System.out.println(mainexample);
+            s = s.substring(0, s.length()-example.length()-temp.length()-1) +
+                    count + s.substring(s.length()-example.length()-1);
+            System.out.println(s);
         }
-        while (!checkInfinity(mainexample) && isHasPlusNumbersInBrackets(mainexample)) {
-            mainexample = openPlusSingleNumbersBrackets(mainexample);
-            System.out.println(mainexample);
-        }
-        while (!checkInfinity(mainexample) && (localMultiply(mainexample) || localDivide(mainexample))) {
-            temp = localExampleIncludingBrackets(mainexample);
-            count = countTemp(temp);
-            if (Double.parseDouble(count) < 0)
-                count = '(' + count + ')';
-            if (mainexample.charAt(localMultiplyOrDivideSign(mainexample)-1) == ')') {
-                x = localStartIncludingBrackets(mainexample)-1;
-            } else {
-                x = localStart(mainexample);
-            }
-            if (mainexample.charAt(localMultiplyOrDivideSign(mainexample)+1) == '(') {
-                y = localEndIncludingBrackets(mainexample)+1;
-            } else {
-                y = localEnd(mainexample);
-            }
-            mainexample = mainexample.substring(0, x) + count + mainexample.substring(y);
-        }
-        while (!checkInfinity(mainexample) && isHasBrackets(mainexample)) {
-            temp = localExampleInBrackets(mainexample);
-            if (startBrackets(mainexample) == 0) {
-                mainexample = temp + mainexample.substring(endBrackets(mainexample) + 1);
-            } else if (mainexample.charAt(startBrackets(mainexample)-1) == '-') {
-                mainexample = mainexample.substring(0, startBrackets(mainexample)-1) + '+' +
-                        temp.substring(1) + mainexample.substring(endBrackets(mainexample)+1);
-            } else if (mainexample.charAt(startBrackets(mainexample)-1) == '+') {
-                mainexample = mainexample.substring(0, startBrackets(mainexample)-1) + temp +
-                        mainexample.substring(endBrackets(mainexample)+1);
-            }
-            System.out.println(mainexample);
-        }
-        while (!checkInfinity(mainexample) && isHasMoreThanSingleNumber(mainexample)) {
-            temp = localExample(mainexample);
-            count = countTemp(temp);
-            mainexample = mainexample.substring(0, localStart(mainexample)) + count +
-                    mainexample.substring(localEnd(mainexample));
-            System.out.println(mainexample);
-        }
-        if (checkInfinity(mainexample)) {
-            System.out.println("Infinity");
-        } else {
-            System.out.println(mainexample);
-        }
+        return s;
     }
     static boolean isHasPlusNumbersInBrackets(String s) {
         for (int i = 0; i < s.length()-1; i++) {
