@@ -21,6 +21,8 @@ public class Calculator {
         mainexample = addMultiply(mainexample);
         int x , y;
         System.out.println(mainexample);
+        temp = localExampleInBrackets(mainexample);
+        System.out.println(temp);
         while (!checkInfinity(mainexample) && isHasBracketsWithNoSingleNumber(mainexample)) {
             example = mainexample;
             temp = localExampleInBrackets(example);
@@ -190,13 +192,6 @@ public class Calculator {
         }
         return false;
     }
-    static boolean divisionByZero(String s) {
-        for (int i = s.length(); i > 2; i--) {
-            if (s.charAt(i) == '/' && s.charAt(i+1) == '0')
-                return true;
-        }
-        return false;
-    }
     static boolean isHasMoreThanSingleNumber(String s) {
         int x = s.charAt(0) == '-' ? 1 : 0;
         int y = 0;
@@ -217,28 +212,28 @@ public class Calculator {
     }
 
     static int startBrackets(String s) {
-        int x = 0, y = 0, z = 0;
+        int x = 0;
         for (int i = 0; i < s.length(); i++) {
             if (s.charAt(i) == '(') {
-                y++;
                 x = i;
-            }
-            if (s.charAt(i) == ')')
-                z++;
-            if (z == 1 && y > 0)
                 break;
+            }
         }
         return x;
     }
     static int endBrackets(String s) {
-        int y = 0;
+        int x = 0, y = 0, z = 0;
         for (int i = 0; i < s.length(); i++) {
-            if (s.charAt(i) == ')') {
-                y = i;
-                break;
+            if (s.charAt(i) == '(')
+                y++;
+            if (s.charAt(i) == ')'){
+                x = i;
+                z++;
             }
+            if (z == y && y > 0)
+                break;
         }
-        return y;
+        return x;
     }
     static String localExampleInBrackets(String s) {
         int x = startBrackets(s);
