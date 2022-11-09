@@ -21,7 +21,7 @@ public class Calculator {
         mainexample = addMultiply(mainexample);
         int x , y;
         System.out.println(mainexample);
-        while (isHasBracketsWithNoSingleNumber(mainexample)) {
+        while (!checkInfinity(mainexample) && isHasBracketsWithNoSingleNumber(mainexample)) {
             example = mainexample;
             temp = localExampleInBrackets(example);
             example = example.substring(endBrackets(example) + 1);
@@ -29,7 +29,7 @@ public class Calculator {
                 temp = localExampleInBrackets(example);
                 example = example.substring(endBrackets(example) + 1);
             }
-            if (isHasMoreThanTwoNumbers(temp)) {
+            if (!checkInfinity(mainexample) && isHasMoreThanTwoNumbers(temp)) {
                 x = temp.length()+1;
                 temp = temp.substring(0, localStart(temp)) + countTemp(localExample(temp)) +
                         temp.substring(localEnd(temp));
@@ -43,11 +43,11 @@ public class Calculator {
                     count + mainexample.substring(mainexample.length()-example.length()-1);
             System.out.println(mainexample);
         }
-        while (isHasPlusNumbersInBrackets(mainexample)) {
+        while (!checkInfinity(mainexample) && isHasPlusNumbersInBrackets(mainexample)) {
             mainexample = openPlusSingleNumbersBrackets(mainexample);
             System.out.println(mainexample);
         }
-        while (localMultiply(mainexample) || localDivide(mainexample)) {
+        while (!checkInfinity(mainexample) && (localMultiply(mainexample) || localDivide(mainexample))) {
             temp = localExampleIncludingBrackets(mainexample);
             count = countTemp(temp);
             if (Double.parseDouble(count) < 0)
@@ -64,7 +64,7 @@ public class Calculator {
             }
             mainexample = mainexample.substring(0, x) + count + mainexample.substring(y);
         }
-        while (isHasBrackets(mainexample)) {
+        while (!checkInfinity(mainexample) && isHasBrackets(mainexample)) {
             temp = localExampleInBrackets(mainexample);
             if (startBrackets(mainexample) == 0) {
                 mainexample = temp + mainexample.substring(endBrackets(mainexample) + 1);
@@ -77,14 +77,18 @@ public class Calculator {
             }
             System.out.println(mainexample);
         }
-        while (isHasMoreThanSingleNumber(mainexample)) {
+        while (!checkInfinity(mainexample) && isHasMoreThanSingleNumber(mainexample)) {
             temp = localExample(mainexample);
             count = countTemp(temp);
             mainexample = mainexample.substring(0, localStart(mainexample)) + count +
                     mainexample.substring(localEnd(mainexample));
             System.out.println(mainexample);
         }
-        System.out.println(mainexample);
+        if (checkInfinity(mainexample)) {
+            System.out.println("Infinity");
+        } else {
+            System.out.println(mainexample);
+        }
     }
     static boolean isHasPlusNumbersInBrackets(String s) {
         for (int i = 0; i < s.length()-1; i++) {
@@ -162,13 +166,6 @@ public class Calculator {
         s = s.substring(0, x) + s.substring(x+1, y) + s.substring(y+1);
         return s;
     }
-    static boolean isHasMinusAfterBrackets(String s) {
-        for (int i = 0; i < s.length()-1; i++) {
-            if (s.charAt(i) == '(' && s.charAt(i+1) == '-')
-                return true;
-        }
-        return false;
-    }
     static boolean isHasMoreThanTwoNumbers(String s) {
         int x = isFirstSignsMinus(s) ? 1 : 0;
         int y = 0;
@@ -193,8 +190,8 @@ public class Calculator {
         }
         return false;
     }
-    static boolean isHasZeroAfterDivide(String s) {
-        for (int i = 0; i < s.length()-1; i++) {
+    static boolean divisionByZero(String s) {
+        for (int i = s.length(); i > 2; i--) {
             if (s.charAt(i) == '/' && s.charAt(i+1) == '0')
                 return true;
         }
@@ -511,5 +508,9 @@ public class Calculator {
             x = 0;
         }
         return true;
+    }
+    static boolean checkInfinity(String s) {
+        String con = "Infinity";
+        return (s.contains(con));
     }
 }
