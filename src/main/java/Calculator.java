@@ -50,7 +50,7 @@ public class Calculator {
         while (localMultiply(mainexample) || localDivide(mainexample)) {
             temp = localExampleIncludingBrackets(mainexample);
             count = countTemp(temp);
-            if (Integer.parseInt(count) < 0)
+            if (Double.parseDouble(count) < 0)
                 count = '(' + count + ')';
             if (mainexample.charAt(localMultiplyOrDivideSign(mainexample)-1) == ')') {
                 x = localStartIncludingBrackets(mainexample)-1;
@@ -336,7 +336,7 @@ public class Calculator {
             return x;
         }
         for (int i = x; i > 1; i--) {
-            if (!Character.isDigit(s.charAt(i-1))) {
+            if (!Character.isDigit(s.charAt(i-1)) && s.charAt(i-1) != '.') {
                 x = i;
                 break;
             }
@@ -356,7 +356,7 @@ public class Calculator {
         }
         for (int i = y+1; i < s.length(); i++) {
             y = i;
-            if (!Character.isDigit(s.charAt(i)))
+            if (!Character.isDigit(s.charAt(i)) && s.charAt(i) != '.')
                 break;
         }
         return y;
@@ -391,29 +391,29 @@ public class Calculator {
         return false;
     }
     static String countTemp(String s) {
-        int x, y;
+        double x, y;
         if (isHasMultiplyOrDivide(s)) {
-            x = Integer.parseInt(s.substring(0, localMultiplyOrDivideSign(s)));
-            y = Integer.parseInt(s.substring(localMultiplyOrDivideSign(s) + 1));
+            x = Double.parseDouble(s.substring(0, localMultiplyOrDivideSign(s)));
+            y = Double.parseDouble(s.substring(localMultiplyOrDivideSign(s) + 1));
         } else {
-            x = Integer.parseInt(s.substring(0, localPlusOrMinusSign(s)));
-            y = Integer.parseInt(s.substring(localPlusOrMinusSign(s) + 1));
+            x = Double.parseDouble(s.substring(0, localPlusOrMinusSign(s)));
+            y = Double.parseDouble(s.substring(localPlusOrMinusSign(s) + 1));
         }
         if (localMultiply(s)) {
             x*=y;
-            s = Integer.toString(x);
+            s = Double.toString(x);
             return s;
         } else if (localDivide(s)) {
             x/=y;
-            s = Integer.toString(x);
+            s = Double.toString(x);
             return s;
         } else if (localPlus(s)) {
             x+=y;
-            s = Integer.toString(x);
+            s = Double.toString(x);
             return s;
         } else if (localMinus(s)) {
             x-=y;
-            s = Integer.toString(x);
+            s = Double.toString(x);
         }
         return s;
     }
