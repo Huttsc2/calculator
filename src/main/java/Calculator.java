@@ -116,12 +116,16 @@ public class Calculator {
         return s;
     }
     static boolean isHasPlusNumbersInBrackets(String s) {
-        for (int i = 0; i < s.length()-1; i++) {
-            if(s.charAt(i) == '(' && Character.isDigit(s.charAt(i+1))) {
-                return true;
-            }
+        boolean isItSingle = false;
+        for (int i = 0; i < s.length(); i++) {
+            if (s.charAt(i) == '(')
+                isItSingle = true;
+            if (isItSingle && s.charAt(i) == '+' || s.charAt(i) == '-' || s.charAt(i) == '*' || s.charAt(i) == '/')
+                isItSingle = false;
+            if (s.charAt(i) == ')' && isItSingle)
+                break;
         }
-        return false;
+        return isItSingle;
     }
     static String localExampleIncludingBrackets(String s) {
         int x = localMultiplyOrDivideSign(s);
@@ -176,16 +180,24 @@ public class Calculator {
         return y;
     }
     static String openPlusSingleNumbersBrackets(String s) {
-        int x = 0, y = s.length()-1;
-        boolean is_minus = false;
-        for (int i = 0; i < s.length()-1; i++) {
-            if (s.charAt(i) == '(' && s.charAt(i + 1) != '-') {
-                x = i;
-                is_minus = true;
+        int x = 0, y = 0;
+        boolean isPlusNumber = false;
+        while (!isPlusNumber) {
+            for (int i = y; i < s.length(); i++) {
+                if (s.charAt(i) == '(')
+                    x = i;
+                if (s.charAt(i) == ')') {
+                    y = i;
+                    break;
+                }
             }
-            if (s.charAt(i) == ')' && is_minus) {
-                y = i;
-                break;
+            isPlusNumber = true;
+            for (int i = x; i < y; i++) {
+                if (s.charAt(i) == '-' || s.charAt(i) == '+' || s.charAt(i) == '/' || s.charAt(i) == '*' ) {
+                    isPlusNumber = false;
+                    y+=1;
+                    break;
+                }
             }
         }
         s = s.substring(0, x) + s.substring(x+1, y) + s.substring(y+1);
@@ -245,15 +257,12 @@ public class Calculator {
         return x;
     }
     static int startBrackets(String s) {
-        int x = 0, y = 0, z = 0;
+        int x = 0;
         for (int i = 0; i < s.length(); i++) {
-            if (s.charAt(i) == ')')
-                y++;
             if (s.charAt(i) == '('){
                 x = i;
-                z++;
             }
-            if (z == y && y > 0)
+            if (s.charAt(i) == ')')
                 break;
         }
         return x;
