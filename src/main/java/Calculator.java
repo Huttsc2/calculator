@@ -110,6 +110,7 @@ public class Calculator {
             count = countTemp(temp);
             s = s.substring(0, s.length()-example.length()-temp.length()-1) +
                     count + s.substring(s.length()-example.length()-1);
+            s = openBrackets(s);
             System.out.println(s);
         }
         return s;
@@ -233,22 +234,22 @@ public class Calculator {
         return false;
     }
 
-    static int startBrackets(String s) {
+    static int endBrackets(String s) {
         int x = 0;
         for (int i = 0; i < s.length(); i++) {
-            if (s.charAt(i) == '(') {
+            if (s.charAt(i) == ')') {
                 x = i;
                 break;
             }
         }
         return x;
     }
-    static int endBrackets(String s) {
+    static int startBrackets(String s) {
         int x = 0, y = 0, z = 0;
         for (int i = 0; i < s.length(); i++) {
-            if (s.charAt(i) == '(')
+            if (s.charAt(i) == ')')
                 y++;
-            if (s.charAt(i) == ')'){
+            if (s.charAt(i) == '('){
                 x = i;
                 z++;
             }
