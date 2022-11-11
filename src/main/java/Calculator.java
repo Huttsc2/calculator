@@ -23,7 +23,7 @@ public class Calculator {
     }
     static String countMinBrackets(String s) {
         String temp;
-        while (!checkInfinity(s) && isHasBrackets(s)) {
+        while (!checkInfinity(s) && isHasSingleMinusNumberInBracketsInBrackets(s)) {
             temp = localExampleInBrackets(s);
             if (startBrackets(s) == 0) {
                 s = temp + s.substring(endBrackets(s) + 1);
@@ -111,6 +111,8 @@ public class Calculator {
             s = s.substring(0, s.length()-example.length()-temp.length()-1) +
                     count + s.substring(s.length()-example.length()-1);
             s = openBrackets(s);
+            if (isHasSingleMinusNumberInBracketsInBrackets(s))
+                s = countMinBrackets(s);
             System.out.println(s);
         }
         return s;
@@ -126,6 +128,25 @@ public class Calculator {
                 break;
         }
         return isItSingle;
+    }
+    static boolean isHasSingleMinusNumberInBracketsInBrackets(String s) {
+        boolean isHas = false;
+        for (int i = 0; i < s.length(); i++) {
+            if (s.charAt(i) == '(' && s.charAt(i+1) == '-') {
+                i+=2;
+                isHas = true;
+                while (s.charAt(i) != ')') {
+                    i++;
+                    if (s.charAt(i) == '+' || s.charAt(i) == '-' ||s.charAt(i) == '*' ||s.charAt(i) == '/') {
+                        isHas = false;
+                        break;
+                    }
+                }
+                if (isHas)
+                    break;
+            }
+        }
+        return isHas;
     }
     static String localExampleIncludingBrackets(String s) {
         int x = localMultiplyOrDivideSign(s);

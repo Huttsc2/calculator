@@ -1,15 +1,22 @@
 public class Program {
     public static void main(String[] args) {
-        String s = "11+(22+33+(99.011)+(11.1*11)+66+(11+22)+77)+88+10";
-        boolean isItSingle = false;
+        String s = "(0.1+(-1))";
+        boolean isHas = false;
         for (int i = 0; i < s.length(); i++) {
-            if (s.charAt(i) == '(')
-                isItSingle = true;
-            if (isItSingle && s.charAt(i) == '+' || s.charAt(i) == '-' || s.charAt(i) == '*' || s.charAt(i) == '/')
-                isItSingle = false;
-            if (s.charAt(i) == ')' && isItSingle)
-                break;
+            if (s.charAt(i) == '(' && s.charAt(i+1) == '-') {
+                i+=2;
+                isHas = true;
+                while (s.charAt(i) != ')') {
+                    i++;
+                    if (s.charAt(i) == '+' || s.charAt(i) == '-' ||s.charAt(i) == '*' ||s.charAt(i) == '/') {
+                        isHas = false;
+                        break;
+                    }
+                }
+                if (isHas)
+                    break;
+            }
         }
-        System.out.println(isItSingle);
+        System.out.println(isHas);
     }
 }
