@@ -5,10 +5,10 @@ public class Calculator {
         String example;
         example = checkExample();
         example = countBrackets(example);
-        example = openMinusSingleNumberInBracketsInBrackets(example);
+        /*example = openMinusSingleNumberInBracketsInBrackets(example);
         example = openBrackets(example);
         example = countMulDiv(example);
-        example = countMinBrackets(example);
+        example = countMinBrackets(example);*/
         countFinalExample(example);
     }
     static String countFinalExample(String s) {
@@ -94,16 +94,24 @@ public class Calculator {
         String temp;
         String count;
         int x;
-        while (!checkInfinity(s) && isHasBracketsWithNoSingleNumber(s)) {
+        while (!checkInfinity(s) && (isHasBracketsWithNoSingleNumber(s) || isHasBrackets(s))) {
+            if (!isHasMoreThanSingleNumber(s))
+                break;
             example = s;
             temp = localExampleInBrackets(example);
             example = example.substring(endBrackets(example) + 1);
-            if (!isHasMoreThanSingleNumber(temp) && Double.parseDouble(temp) >= 0)
+            if (!isHasMoreThanSingleNumber(temp) && Double.parseDouble(temp) >= 0) {
                 s = openBrackets(s);
-            if (!isHasMoreThanSingleNumber(temp) && Double.parseDouble(temp) < 0)
+                continue;
+            }
+            if (!isHasMoreThanSingleNumber(temp) && Double.parseDouble(temp) < 0) {
                 s = openMinusSingleNumberInBrackets(s);
-                if (isHasSingleMinusNumberInBracketsInBrackets(s))
+                continue;
+            }
+            if (isHasSingleMinusNumberInBracketsInBrackets(s)) {
                 s = openMinusSingleNumberInBracketsInBrackets(s);
+                continue;
+            }
             if (!checkInfinity(s) && isHasMoreThanTwoNumbers(temp)) {
                 x = temp.length()+1;
                 temp = temp.substring(0, localStart(temp)) + countTemp(localExample(temp)) +
@@ -117,6 +125,7 @@ public class Calculator {
                 count = countTemp(temp);
                 s = s.substring(0, s.length()-example.length()-temp.length()-1) +
                         count + s.substring(s.length()-example.length()-1);
+                continue;
             }
 
             System.out.println(s);
@@ -246,17 +255,19 @@ public class Calculator {
     static String openMinusSingleNumberInBrackets(String s) {
         int x = startBrackets(s);
         int y = endBrackets(s);
+        int q = y+1 == s.length() ? 0 : 1;
+        int w = x == 0 ? 0 : 1;
         String temp;
         int z = 0;
-        if (s.charAt(x-1) == '+' && s.charAt(y+1) != '*' && s.charAt(y+1) != '/') {
+        if (s.charAt(x-w) == '+' && s.charAt(y+q) != '*' && s.charAt(y+q) != '/') {
             s = s.substring(0, x-1) + s.substring(x+1, y) + s.substring(y+1);
-        } else if (s.charAt(x-1) == '-' && s.charAt(x-2) != '(' && s.charAt(y+1) != '*' && s.charAt(y+1) != '/') {
-            s = s.substring(0,x-1) + '+' + s.substring(x+2, y) + s.substring(y+1);
-        } else if (s.charAt(x-1) == '(') {
+        } else if (s.charAt(x-w) == '-' && s.charAt(x-w-w) != '(' && s.charAt(y+q) != '*' && s.charAt(y+q) != '/') {
+            s = s.substring(0,x-w) + '+' + s.substring(x+2, y) + s.substring(y+q);
+        } else if (s.charAt(x-w) == '(') {
             s = s.substring(0,x) + s.substring(x+1, y) + s.substring(y+1);
-        } else if (s.charAt(x-1) == '-' && s.charAt(x-2) == '(') {
-            s = s.substring(0,x-1) + s.substring(x+2, y) + s.substring(y+1);
-        } else if ((s.charAt(y+1) == '*' || s.charAt(y+1) == '/') && s.charAt(y+2) != '(') {
+        } else if (s.charAt(x-w) == '-' && s.charAt(x-2) == '(') {
+            s = s.substring(0,x-w) + s.substring(x+2, y) + s.substring(y+1);
+        } else if ((s.charAt(y+q) == '*' || s.charAt(y+q) == '/') && s.charAt(y+q+q) != '(') {
             for (int i = y + 2; i < s.length(); i++) {
                 if (s.charAt(i) == '+' || s.charAt(i) == '-' || s.charAt(i) == '/' ||
                         s.charAt(i) == '*' || s.charAt(i) == ')') {
@@ -273,6 +284,32 @@ public class Calculator {
             temp = s.substring(y, z).replaceAll("[)(]", "");
             temp = countTemp(temp);
             s = s.substring(0, x + 1) + temp + ')' + s.substring(z);
+        } else if (s.charAt(x-w) == '*' || s.charAt(x-w) == '/') {
+            for (int i = x-2; i > 0; i--) {
+                if (s.charAt(i) == '+' || s.charAt(i) == '/' || s.charAt(i) == '*') {
+                    z = i+1;
+                    break;
+                } else if (s.charAt(i) == '-' &&  Character.isDigit(s.charAt(i-1))){
+                    z = i+1;
+                    break;
+                } else if (s.charAt(i) == '-') {
+                    z = i;
+                    break;
+                }
+            }
+            temp = s.substring(z, y).replaceAll("[)(]", "");
+            temp = countTemp(temp);
+            s = s.substring(0, z) + '(' + temp + s.substring(y);
+        } else if (s.charAt(y+q) == '*' && s.charAt(y+q+q) == '(') {
+            for (int i = y+4; i < s.length(); i++) {
+                if (!Character.isDigit(s.charAt(i)) && s.charAt(i) != '.') {
+                    y = i;
+                    break;
+                }
+            }
+            temp = s.substring(x, y+1).replaceAll("[)(]", "");
+            temp = countTemp(temp);
+            s = s.substring(0, x) + '(' + temp + s.substring(y);
         }
         return s;
     }
@@ -282,15 +319,17 @@ public class Calculator {
             String temp;
             x = localStartMinusSingleNumberInBracketsInBrackets(s);
             y = localEndMinusSingleNumberInBrackets(s);
-            if (s.charAt(x-1) == '+' && s.charAt(y+1) != '*' && s.charAt(y+1) != '/') {
-                s = s.substring(0, x-1) + s.substring(x+1, y) + s.substring(y+1);
-            } else if (s.charAt(x-1) == '-' && s.charAt(x-2) != '(' && s.charAt(y+1) != '*' && s.charAt(y+1) != '/') {
-                s = s.substring(0,x-1) + '+' + s.substring(x+2, y) + s.substring(y+1);
+            int w = x == 0 ? 0 : 1;
+            int q = y+1 == s.length() ? 0 : 1;
+            if (s.charAt(x-w) == '+' && s.charAt(y+q) != '*' && s.charAt(y+q) != '/') {
+                s = s.substring(0, x-1) + s.substring(x+1, y) + s.substring(y+q);
+            } else if (s.charAt(x-w) == '-' && s.charAt(x-2) != '(' && s.charAt(y+q) != '*' && s.charAt(y+q) != '/') {
+                s = s.substring(0,x-w) + '+' + s.substring(x+2, y) + s.substring(y+1);
             } else if (s.charAt(x-1) == '(') {
-                s = s.substring(0,x) + s.substring(x+1, y) + s.substring(y+1);
-            } else if (s.charAt(x-1) == '-' && s.charAt(x-2) == '(') {
-                s = s.substring(0,x-1) + s.substring(x+2, y) + s.substring(y+1);
-            } else if ((s.charAt(y+1) == '*' || s.charAt(y+1) == '/') && s.charAt(y+2) != '(') {
+                s = s.substring(0,x) + s.substring(x+1, y) + s.substring(y+q);
+            } else if (s.charAt(x-w) == '-' && s.charAt(x-w-w) == '(') {
+                s = s.substring(0,x-w) + s.substring(x+2, y) + s.substring(y+q);
+            } else if ((s.charAt(y+q) == '*' || s.charAt(y+q) == '/') && s.charAt(y+q+q) != '(') {
                 for (int i = y + 2; i < s.length(); i++) {
                     if (s.charAt(i) == '+' || s.charAt(i) == '-' || s.charAt(i) == '/' ||
                             s.charAt(i) == '*' || s.charAt(i) == ')') {
@@ -307,6 +346,32 @@ public class Calculator {
                 temp = s.substring(y, z).replaceAll("[)(]", "");
                 temp = countTemp(temp);
                 s = s.substring(0, x + 1) + temp + ')' + s.substring(z);
+            } else if (s.charAt(x-w) == '*' || s.charAt(x-w) == '/') {
+                for (int i = x-2; i > 0; i--) {
+                    if (s.charAt(i) == '+' || s.charAt(i) == '/' || s.charAt(i) == '*') {
+                        z = i+1;
+                        break;
+                    } else if (s.charAt(i) == '-' &&  Character.isDigit(s.charAt(i-1))){
+                        z = i+1;
+                        break;
+                    } else if (s.charAt(i) == '-') {
+                        z = i;
+                        break;
+                    }
+                }
+                temp = s.substring(z, y).replaceAll("[)(]", "");
+                temp = countTemp(temp);
+                s = s.substring(0, z) + '(' + temp + s.substring(y);
+            } else if (s.charAt(y+q) == '*' && s.charAt(y+q+q) == '(') {
+                for (int i = y+4; i < s.length(); i++) {
+                    if (!Character.isDigit(s.charAt(i)) && s.charAt(i) != '.') {
+                        y = i;
+                        break;
+                    }
+                }
+                temp = s.substring(x, y+1).replaceAll("[)(]", "");
+                temp = countTemp(temp);
+                s = s.substring(0, x) + '(' + temp + s.substring(y);
             }
         }
         return s;
@@ -398,7 +463,8 @@ public class Calculator {
         return false;
     }
     static boolean isHasMoreThanSingleNumber(String s) {
-        int x = s.charAt(0) == '-' ? 1 : 0;
+        int z = s.charAt(0) == '(' ? 1 : 0;
+        int x = s.charAt(0 + z) == '-' ? 1 + z : 0 + z;
         int y = 0;
         for (int i = x; i < s.length(); i++) {
             if (s.charAt(i) == '/' || s.charAt(i) == '*' || s.charAt(i) == '+' || s.charAt(i) == '-')
