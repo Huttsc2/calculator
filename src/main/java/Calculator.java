@@ -5,10 +5,10 @@ public class Calculator {
         String example;
         example = checkExample();
         example = countBrackets(example);
-        /*example = openMinusSingleNumberInBracketsInBrackets(example);
+        example = openMinusSingleNumberInBracketsInBrackets(example);
         example = openBrackets(example);
         example = countMulDiv(example);
-        example = countMinBrackets(example);*/
+        example = countMinBrackets(example);
         countFinalExample(example);
     }
     static String countFinalExample(String s) {
