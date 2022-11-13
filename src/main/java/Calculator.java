@@ -5,11 +5,8 @@ public class Calculator {
         String example;
         example = checkExample();
         example = countBrackets(example);
-        /*example = openMinusSingleNumberInBracketsInBrackets(example);
-        example = openBrackets(example);
-        example = countMulDiv(example);
-        example = countMinBrackets(example);*/
-        countFinalExample(example);
+        example = countFinalExample(example);
+        System.out.println(example);
     }
     static String countFinalExample(String s) {
         String temp, count;
@@ -24,45 +21,6 @@ public class Calculator {
         if (checkInfinity(s)) {
             s = "division by zero error";
         }
-        System.out.println(s);
-        return s;
-    }
-    static String countMinBrackets(String s) {
-        String temp;
-        while (!checkInfinity(s) && isHasBrackets(s)) {
-            temp = localExampleInBrackets(s);
-            if (startBrackets(s) == 0) {
-                s = temp + s.substring(endBrackets(s) + 1);
-            } else if (s.charAt(startBrackets(s)-1) == '-') {
-                s = s.substring(0, startBrackets(s)-1) + '+' +
-                        temp.substring(1) + s.substring(endBrackets(s)+1);
-            } else if (s.charAt(startBrackets(s)-1) == '+') {
-                s = s.substring(0, startBrackets(s)-1) + temp +
-                        s.substring(endBrackets(s)+1);
-            }
-        }
-        return s;
-    }
-    static String countMulDiv(String s) {
-        String temp, count;
-        int x, y;
-        while (!checkInfinity(s) && (localMultiply(s) || localDivide(s))) {
-            temp = localExampleIncludingBrackets(s);
-            count = countTemp(temp);
-            if (Double.parseDouble(count) < 0)
-                count = '(' + count + ')';
-            if (s.charAt(localMultiplyOrDivideSign(s)-1) == ')') {
-                x = localStartIncludingBrackets(s)-1;
-            } else {
-                x = localStart(s);
-            }
-            if (s.charAt(localMultiplyOrDivideSign(s)+1) == '(') {
-                y = localEndIncludingBrackets(s)+1;
-            } else {
-                y = localEnd(s);
-            }
-            s = s.substring(0, x) + count + s.substring(y);
-        }
         return s;
     }
     static String openBrackets(String s) {
@@ -76,6 +34,8 @@ public class Calculator {
         boolean isCorrect = false;
         Scanner sc = new Scanner(System.in);
         System.out.println("Enter your example");
+        System.out.println("You can use numbers and next symbols:");
+        System.out.println("'.' '/' '*' '-' '+' '(' ')'");
         while (!isCorrect) {
             s = sc.nextLine().replaceAll(" ", "");
             isCorrect = firstCorrect(s);
@@ -86,6 +46,8 @@ public class Calculator {
         }
         sc.close();
         s = addMultiply(s);
+        if (checkDivisionByZero(s))
+            s = "Infinity";
         return s;
     }
     static String countBrackets(String s) {
@@ -105,10 +67,6 @@ public class Calculator {
             }
             if (!isHasMoreThanSingleNumber(temp) && Double.parseDouble(temp) < 0) {
                 s = openMinusSingleNumberInBrackets(s);
-                continue;
-            }
-            if (isHasSingleMinusNumberInBracketsInBrackets(s)) {
-                s = openMinusSingleNumberInBracketsInBrackets(s);
                 continue;
             }
             if (!checkInfinity(s) && isHasMoreThanTwoNumbers(temp)) {
@@ -138,90 +96,6 @@ public class Calculator {
                 break;
         }
         return isItSingle;
-    }
-    static boolean isHasSingleMinusNumberInBracketsInBrackets(String s) {
-        int x = 0;
-        boolean bracketsOpen = false;
-        boolean isHasMinus = false;
-        for (int i = 0; i < s.length(); i++) {
-            if (bracketsOpen && s.charAt(i) == '(' && s.charAt(i+1) == '-') {
-                i+=2;
-                for (int j = i; j < s.length(); j++) {
-                    if (s.charAt(j) == '(' || s.charAt(j) == '/' || s.charAt(j) == '*'
-                            || s.charAt(j) == '-' || s.charAt(j) == '+')
-                        break;
-                    if (s.charAt(j) == ')' && x > 0)
-                        isHasMinus = true;
-                }
-            }
-            if (s.charAt(i) == '(') {
-                x++;
-                bracketsOpen = true;
-            }
-            if (s.charAt(i) == ')') {
-                x--;
-            }
-            if (bracketsOpen && x == 0)
-                bracketsOpen = false;
-
-            if (isHasMinus)
-                break;
-        }
-        return isHasMinus;
-    }
-    static String localExampleIncludingBrackets(String s) {
-        int x = localPlusOrMinusSign(s);
-        if (isHasMultiplyOrDivide(s))
-            x = localMultiplyOrDivideSign(s);
-        int y, z;
-        if (s.charAt(x-1) == ')') {
-            y = localStartIncludingBrackets(s);
-        } else {
-            y = localStart(s);
-        }
-        if (s.charAt(x+1) == '(') {
-            z = localEndIncludingBrackets(s);
-        } else {
-            z = localEnd(s);
-        }
-        s = s.substring(y, z);
-        s = s.replaceAll("[)(]", "");
-        return s;
-    }
-    static int localStartIncludingBrackets(String s) {
-        int x = 1;
-        if (isHasMultiplyOrDivide(s)) {
-            x = localMultiplyOrDivideSign(s);
-        }
-        if (isItFirstSign(s)) {
-            x = 1;
-            return x;
-        }
-        for (int i = x; i > 1; i--) {
-            if (s.charAt(i-1) == '(') {
-                x = i;
-                break;
-            }
-        }
-        return x;
-    }
-    static int localEndIncludingBrackets(String s) {
-        int y;
-        if (isHasMultiplyOrDivide(s)) {
-            y = localMultiplyOrDivideSign(s);
-        } else {
-            y = localPlusOrMinusSign(s);
-        }
-        if (isItLastSign(s)) {
-            y = s.length();
-            return y;
-        }
-        for (int i = y+1; i < s.length(); i++) {
-            y = i;
-            if (s.charAt(i) == ')')
-                break;
-        }
-        return y;
     }
     static String openPlusSingleNumbersBrackets(String s) {
         int x = 0, y = 0;
@@ -308,131 +182,6 @@ public class Calculator {
         }
         return s;
     }
-    static String openMinusSingleNumberInBracketsInBrackets(String s) {
-        while (isHasSingleMinusNumberInBracketsInBrackets(s)) {
-            int x,y,z = 0;
-            String temp;
-            x = localStartMinusSingleNumberInBracketsInBrackets(s);
-            y = localEndMinusSingleNumberInBrackets(s);
-            int w = x == 0 ? 0 : 1;
-            int q = y+1 == s.length() ? 0 : 1;
-            if (s.charAt(x-w) == '+' && s.charAt(y+q) != '*' && s.charAt(y+q) != '/') {
-                s = s.substring(0, x-1) + s.substring(x+1, y) + s.substring(y+q);
-            } else if (s.charAt(x-w) == '-' && s.charAt(x-2) != '(' && s.charAt(y+q) != '*' && s.charAt(y+q) != '/') {
-                s = s.substring(0,x-w) + '+' + s.substring(x+2, y) + s.substring(y+1);
-            } else if (s.charAt(x-1) == '(') {
-                s = s.substring(0,x) + s.substring(x+1, y) + s.substring(y+q);
-            } else if (s.charAt(x-w) == '-' && s.charAt(x-w-w) == '(') {
-                s = s.substring(0,x-w) + s.substring(x+2, y) + s.substring(y+q);
-            } else if ((s.charAt(y+q) == '*' || s.charAt(y+q) == '/') && s.charAt(y+q+q) != '(') {
-                for (int i = y + 2; i < s.length(); i++) {
-                    if (s.charAt(i) == '+' || s.charAt(i) == '-' || s.charAt(i) == '/' ||
-                            s.charAt(i) == '*' || s.charAt(i) == ')') {
-                        z = i;
-                        break;
-                    }
-                }
-                for (int i = y; i > 0; i--) {
-                    if (s.charAt(i) == '(') {
-                        y = i + 1;
-                        break;
-                    }
-                }
-                temp = s.substring(y, z).replaceAll("[)(]", "");
-                temp = countTemp(temp);
-                s = s.substring(0, x + 1) + temp + ')' + s.substring(z);
-            } else if (s.charAt(x-w) == '*' || s.charAt(x-w) == '/') {
-                for (int i = x-2; i > 0; i--) {
-                    if (s.charAt(i) == '+' || s.charAt(i) == '/' || s.charAt(i) == '*') {
-                        z = i+1;
-                        break;
-                    } else if (s.charAt(i) == '-' &&  Character.isDigit(s.charAt(i-1))){
-                        z = i+1;
-                        break;
-                    } else if (s.charAt(i) == '-') {
-                        z = i;
-                        break;
-                    }
-                }
-                temp = s.substring(z, y).replaceAll("[)(]", "");
-                temp = countTemp(temp);
-                s = s.substring(0, z) + '(' + temp + s.substring(y);
-            } else if (s.charAt(y+q) == '*' && s.charAt(y+q+q) == '(') {
-                for (int i = y+4; i < s.length(); i++) {
-                    if (!Character.isDigit(s.charAt(i)) && s.charAt(i) != '.') {
-                        y = i;
-                        break;
-                    }
-                }
-                temp = s.substring(x, y+1).replaceAll("[)(]", "");
-                temp = countTemp(temp);
-                s = s.substring(0, x) + '(' + temp + s.substring(y);
-            }
-        }
-        return s;
-    }
-    static int localStartMinusSingleNumberInBracketsInBrackets(String s) {
-        int x = 0,y = 0;
-        boolean bracketsOpen = false;
-        boolean isHasMinus = false;
-        for (int i = 0; i < s.length(); i++) {
-            if (bracketsOpen && s.charAt(i) == '(' && s.charAt(i+1) == '-') {
-                y = i;
-                i+=2;
-                for (int j = i; j < s.length(); j++) {
-                    if (s.charAt(j) == '(' || s.charAt(j) == '/' || s.charAt(j) == '*'
-                            || s.charAt(j) == '-' || s.charAt(j) == '+')
-                        break;
-                    if (s.charAt(j) == ')' && x > 0)
-                        isHasMinus = true;
-                }
-            }
-            if (s.charAt(i) == '(') {
-                x++;
-                bracketsOpen = true;
-            }
-            if (s.charAt(i) == ')') {
-                x--;
-            }
-            if (bracketsOpen && x == 0)
-                bracketsOpen = false;
-
-            if (isHasMinus)
-                break;
-        }
-        return y;
-    }
-    static int localEndMinusSingleNumberInBrackets(String s) {
-        int x = 0,z = 0;
-        boolean bracketsOpen = false;
-        boolean isHasMinus = false;
-        for (int i = 0; i < s.length(); i++) {
-            if (bracketsOpen && s.charAt(i) == '(' && s.charAt(i+1) == '-') {
-                i+=2;
-                for (int j = i; j < s.length(); j++) {
-                    if (s.charAt(j) == '(' || s.charAt(j) == '/' || s.charAt(j) == '*'
-                            || s.charAt(j) == '-' || s.charAt(j) == '+')
-                        break;
-                    if (s.charAt(j) == ')' && x > 0)
-                        isHasMinus = true;
-                    z = j;
-                }
-            }
-            if (s.charAt(i) == '(') {
-                x++;
-                bracketsOpen = true;
-            }
-            if (s.charAt(i) == ')') {
-                x--;
-            }
-            if (bracketsOpen && x == 0)
-                bracketsOpen = false;
-
-            if (isHasMinus)
-                break;
-        }
-        return z;
-    }
     static boolean isHasMoreThanTwoNumbers(String s) {
         int x = isFirstSignsMinus(s) ? 1 : 0;
         int y = 0;
@@ -440,9 +189,7 @@ public class Calculator {
             if (s.charAt(i) == '/' || s.charAt(i) == '*' || s.charAt(i) == '+' || s.charAt(i) == '-')
                 y++;
         }
-        if (y > 1)
-            return true;
-        return false;
+        return y > 1;
     }
     static boolean isHasBracketsWithNoSingleNumber(String s) {
         int x;
@@ -459,15 +206,13 @@ public class Calculator {
     }
     static boolean isHasMoreThanSingleNumber(String s) {
         int z = s.charAt(0) == '(' ? 1 : 0;
-        int x = s.charAt(0 + z) == '-' ? 1 + z : 0 + z;
+        int x = s.charAt(z) == '-' ? 1 + z : z;
         int y = 0;
         for (int i = x; i < s.length(); i++) {
             if (s.charAt(i) == '/' || s.charAt(i) == '*' || s.charAt(i) == '+' || s.charAt(i) == '-')
                 y++;
         }
-        if (y == 0)
-            return false;
-        return true;
+        return y != 0;
     }
     static boolean isHasBrackets(String s) {
         for (int i = 0; i < s.length(); i++) {
@@ -505,9 +250,7 @@ public class Calculator {
         return s;
     }
     static boolean isFirstSignsMinus(String s) {
-        if (s.charAt(0) == '-')
-            return true;
-        return false;
+        return s.charAt(0) == '-';
     }
     static boolean isHasMultiplyOrDivide(String s) {
         for (int i = 0; i < s.length(); i++) {
@@ -554,11 +297,7 @@ public class Calculator {
                 z++;
             }
         }
-        if (z == 0) {
-            return true;
-        } else {
-            return false;
-        }
+        return z == 0;
     }
     static boolean isItLastSign(String s) {
         int x;
@@ -573,11 +312,7 @@ public class Calculator {
                 z++;
             }
         }
-        if (z == 0) {
-            return true;
-        } else {
-            return false;
-        }
+        return z == 0;
     }
     static int localStart(String s) {
         int x;
@@ -673,18 +408,30 @@ public class Calculator {
         return s;
     }
     static boolean firstCorrect(String s) {
+        if (checkEmptyExample(s))
+            return false;
         if (s.charAt(s.length()-1) == '-' || s.charAt(s.length()-1) == '+' ||s.charAt(s.length()-1) == '/' ||
                 s.charAt(s.length()-1) == '*' ||s.charAt(s.length()-1) == '(' || s.charAt(s.length()-1) == '.')
             return false;
-        if (Character.isDigit(s.charAt(0)) || s.charAt(0) == '-' || s.charAt(0) == '(' || s.charAt(0) == '+') {
-            if (checkBrackets(s) && checkSymbol(s) && checkSigns(s) && checkDots(s)) {
-                return true;
-            } else {
-                return false;
-            }
+        if (Character.isDigit(s.charAt(0)) || s.charAt(0) == '-' || s.charAt(0) == '(') {
+            return checkBrackets(s) && checkSymbol(s) && checkSigns(s) && checkDots(s);
         } else {
             return false;
         }
+    }
+    static boolean checkEmptyExample(String s) {
+        return s.length() == 0;
+    }
+    static boolean checkDivisionByZero(String s) {
+        for (int i = 1; i < s.length()-1; i++) {
+            if (s.charAt(i) == '0' && s.charAt(i-1) == '/') {
+                if (i == s.charAt(i)-1)
+                    return true;
+                if (s.charAt(i+1) != '.')
+                    return true;
+            }
+        }
+        return false;
     }
     static boolean checkBrackets(String s) {
         int x = 0;
@@ -702,11 +449,7 @@ public class Calculator {
                 x--;
             }
         }
-        if (x == 0) {
-            return true;
-        } else {
-            return false;
-        }
+        return x == 0;
     }
     static boolean checkSymbol(String s) {
         int x = 0;
@@ -715,11 +458,7 @@ public class Calculator {
                     || s.charAt(i) == '*' || s.charAt(i) == '(' || s.charAt(i) == ')' || s.charAt(i) == '.')
                 x++;
         }
-        if (x == s.length()) {
-            return true;
-        } else {
-            return false;
-        }
+        return x == s.length();
     }
     static boolean checkSigns(String s) {
         for (int i = 1; i < s.length(); i++) {
@@ -732,7 +471,7 @@ public class Calculator {
         return true;
     }
     static String addMultiply(String s) {
-        StringBuffer ns = new StringBuffer(s);
+        StringBuilder ns = new StringBuilder(s);
         for (int i = 1; i < s.length(); i++) {
             if (s.charAt(i) == '(' && (Character.isDigit(s.charAt(i-1)) || s.charAt(i-1) == ')')) {
                 ns.insert(i, '*');
@@ -753,11 +492,11 @@ public class Calculator {
         s = s.replaceAll("[-+*()/]", " ").replaceAll("[\\s]{2,}", " ");
         String[] d = s.split(" ");
         int x = 0;
-        for (int i = 0; i < d.length; i++) {
-            for (int j = 0; j < d[i].length(); j++) {
-                if (d[i].charAt(0) == '.')
+        for (String value : d) {
+            for (int j = 0; j < value.length(); j++) {
+                if (value.charAt(0) == '.')
                     return false;
-                if (d[i].charAt(j) == '.') {
+                if (value.charAt(j) == '.') {
                     x++;
                 }
                 if (x > 1)
