@@ -56,8 +56,6 @@ public class Calculator {
         String count;
         int x;
         while (!checkInfinity(s) && (isHasBracketsWithNoSingleNumber(s) || isHasBrackets(s))) {
-            if (!isHasMoreThanSingleNumber(s))
-                break;
             example = s;
             temp = localExampleInBrackets(example);
             example = example.substring(endBrackets(example) + 1);
@@ -137,9 +135,10 @@ public class Calculator {
         } else if (s.charAt(x-w) == '-' && s.charAt(x-2) == '(') {
             s = s.substring(0,x-w) + s.substring(x+2, y) + s.substring(y+1);
         } else if ((s.charAt(y+q) == '*' || s.charAt(y+q) == '/') && s.charAt(y+q+q) != '(') {
+            z = y + 3;
             for (int i = y + 2; i < s.length(); i++) {
                 if (s.charAt(i) == '+' || s.charAt(i) == '-' || s.charAt(i) == '/' ||
-                        s.charAt(i) == '*' || s.charAt(i) == ')') {
+                        s.charAt(i) == '*' || s.charAt(i) == ')' ) {
                     z = i;
                     break;
                 }
