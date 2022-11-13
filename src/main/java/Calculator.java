@@ -5,10 +5,10 @@ public class Calculator {
         String example;
         example = checkExample();
         example = countBrackets(example);
-        example = openMinusSingleNumberInBracketsInBrackets(example);
+        /*example = openMinusSingleNumberInBracketsInBrackets(example);
         example = openBrackets(example);
         example = countMulDiv(example);
-        example = countMinBrackets(example);
+        example = countMinBrackets(example);*/
         countFinalExample(example);
     }
     static String countFinalExample(String s) {
@@ -16,13 +16,15 @@ public class Calculator {
         while (!checkInfinity(s) && isHasMoreThanSingleNumber(s)) {
             temp = localExample(s);
             count = countTemp(temp);
-            if (isHasMoreThanTwoNumbers(s)) {
+            if (isHasMoreThanTwoNumbers(s))
                 s = s.substring(0, localStart(s)) + count + s.substring(localEnd(s));
-            } else {
-                s = countTemp(s);
-            }
-            System.out.println(s);
+            else
+                 s = countTemp(s);
         }
+        if (checkInfinity(s)) {
+            s = "division by zero error";
+        }
+        System.out.println(s);
         return s;
     }
     static String countMinBrackets(String s) {
@@ -38,7 +40,6 @@ public class Calculator {
                 s = s.substring(0, startBrackets(s)-1) + temp +
                         s.substring(endBrackets(s)+1);
             }
-            System.out.println(s);
         }
         return s;
     }
@@ -67,7 +68,6 @@ public class Calculator {
     static String openBrackets(String s) {
         while (!checkInfinity(s) && isHasPlusNumbersInBrackets(s)) {
             s = openPlusSingleNumbersBrackets(s);
-            System.out.println(s);
         }
         return s;
     }
@@ -86,7 +86,6 @@ public class Calculator {
         }
         sc.close();
         s = addMultiply(s);
-        System.out.println(s);
         return s;
     }
     static String countBrackets(String s) {
@@ -118,17 +117,13 @@ public class Calculator {
                         temp.substring(localEnd(temp));
                 s = s.substring(0, s.length()-example.length()-x) +
                         temp + s.substring(s.length()-example.length()-1);
-                System.out.println(s);
                 continue;
             }
             if (isHasMoreThanSingleNumber(temp)) {
                 count = countTemp(temp);
                 s = s.substring(0, s.length()-example.length()-temp.length()-1) +
                         count + s.substring(s.length()-example.length()-1);
-                continue;
             }
-
-            System.out.println(s);
         }
         return s;
     }
