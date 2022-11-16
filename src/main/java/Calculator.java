@@ -134,6 +134,22 @@ public class Calculator {
             s = s.substring(0,x) + s.substring(x+1, y) + s.substring(y+1);
         } else if (s.charAt(x-w) == '-' && s.charAt(x-2) == '(') {
             s = s.substring(0,x-w) + s.substring(x+2, y) + s.substring(y+1);
+        } else if (s.charAt(x-w) == '*' || s.charAt(x-w) == '/') {
+            for (int i = x-2; i > 0; i--) {
+                if (s.charAt(i) == '+' || s.charAt(i) == '/' || s.charAt(i) == '*') {
+                    z = i+1;
+                    break;
+                } else if (s.charAt(i) == '-' &&  Character.isDigit(s.charAt(i-1))){
+                    z = i+1;
+                    break;
+                } else if (s.charAt(i) == '-') {
+                    z = i;
+                    break;
+                }
+            }
+            temp = s.substring(z, y).replaceAll("[)(]", "");
+            temp = countTemp(temp);
+            s = s.substring(0, z) + '(' + temp + s.substring(y);
         } else if ((s.charAt(y+q) == '*' || s.charAt(y+q) == '/') && s.charAt(y+q+q) != '(') {
             z = y + 3;
             for (int i = y + 2; i < s.length(); i++) {
@@ -152,22 +168,6 @@ public class Calculator {
             temp = s.substring(y, z).replaceAll("[)(]", "");
             temp = countTemp(temp);
             s = s.substring(0, x + 1) + temp + ')' + s.substring(z);
-        } else if (s.charAt(x-w) == '*' || s.charAt(x-w) == '/') {
-            for (int i = x-2; i > 0; i--) {
-                if (s.charAt(i) == '+' || s.charAt(i) == '/' || s.charAt(i) == '*') {
-                    z = i+1;
-                    break;
-                } else if (s.charAt(i) == '-' &&  Character.isDigit(s.charAt(i-1))){
-                    z = i+1;
-                    break;
-                } else if (s.charAt(i) == '-') {
-                    z = i;
-                    break;
-                }
-            }
-            temp = s.substring(z, y).replaceAll("[)(]", "");
-            temp = countTemp(temp);
-            s = s.substring(0, z) + '(' + temp + s.substring(y);
         } else if (s.charAt(y+q) == '*' && s.charAt(y+q+q) == '(') {
             for (int i = y+4; i < s.length(); i++) {
                 if (!Character.isDigit(s.charAt(i)) && s.charAt(i) != '.') {
@@ -412,21 +412,18 @@ public class Calculator {
         if (s.charAt(s.length()-1) == '-' || s.charAt(s.length()-1) == '+' ||s.charAt(s.length()-1) == '/' ||
                 s.charAt(s.length()-1) == '*' ||s.charAt(s.length()-1) == '(' || s.charAt(s.length()-1) == '.')
             return false;
-        if (Character.isDigit(s.charAt(0)) || s.charAt(0) == '-' || s.charAt(0) == '(') {
-            return checkBrackets(s) && checkSymbol(s) && checkSigns(s) && checkDots(s);
-        } else {
-            return false;
-        }
+        return  (Character.isDigit(s.charAt(0)) || s.charAt(0) == '-' || s.charAt(0) == '(') &&
+                checkBrackets(s) && checkSymbol(s) && checkSigns(s) && checkDots(s) && checkSignBeforeBrackets(s);
     }
     static boolean checkEmptyExample(String s) {
         return s.length() == 0;
     }
     static boolean checkDivisionByZero(String s) {
         for (int i = 1; i < s.length()-1; i++) {
-            if (s.charAt(i) == '0' && s.charAt(i-1) == '/') {
-                if (i == s.charAt(i)-1)
+            if (s.charAt(i) == '/' && s.charAt(i+1) == '0') {
+                if (s.length() == i+2)
                     return true;
-                if (s.charAt(i+1) != '.')
+                if (s.charAt(i+2) != '.')
                     return true;
             }
         }
@@ -434,21 +431,24 @@ public class Calculator {
     }
     static boolean checkBrackets(String s) {
         int x = 0;
-        boolean is_first_right_bracket = false;
+        boolean isFirstRightBracket = false;
         for (int i = 0; i < s.length(); i++) {
             if (s.charAt(i) == '(') {
-                is_first_right_bracket = true;
+                isFirstRightBracket = true;
                 x++;
-                if (Character.isDigit(s.charAt(i+1)) || s.charAt(i+1) == '('
-                        || s.charAt(i+1) == '-' || s.charAt(i+1) == '+') {
-                } else {
-                    x++;
-                }
-            } else if (s.charAt(i) == ')' && is_first_right_bracket) {
+            } else if (s.charAt(i) == ')' && isFirstRightBracket) {
                 x--;
             }
         }
         return x == 0;
+    }
+    static boolean checkSignBeforeBrackets(String s) {
+        for (int i = 0; i < s.length(); i++) {
+            if (s.charAt(i) == ')' && (s.charAt(i-1) == '-' || s.charAt(i-1) == '+' || s.charAt(i-1) == '*' ||
+                    s.charAt(i-1) == '/' || s.charAt(i-1) == '.' || s.charAt(i-1) == '('))
+                return false;
+        }
+        return true;
     }
     static boolean checkSymbol(String s) {
         int x = 0;

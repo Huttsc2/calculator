@@ -12,7 +12,10 @@ repositories {
 }
 
 dependencies {
+    implementation("org.testng:testng:7.1.0")
+    implementation("org.junit.jupiter:junit-jupiter:5.8.1")
     testImplementation("org.testng:testng:7.1.0")
+    testImplementation("org.junit.jupiter:junit-jupiter:5.8.1")
     testImplementation("org.junit.jupiter:junit-jupiter:5.8.1")
 }
 
