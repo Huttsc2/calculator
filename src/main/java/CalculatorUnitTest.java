@@ -1,36 +1,41 @@
 import org.junit.jupiter.api.Test;
 
 import java.io.ByteArrayInputStream;
-import java.io.IOException;
 import java.io.InputStream;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class CalculatorUnitTest {
 
-    @org.junit.jupiter.api.Test
+    @Test
     void addMultiplyCorrect() {
-        assertEquals("1*(1+1)*1", Calculator.addMultiply("1(1+1)1"));
+        Calculator calculator = new Calculator();
+        assertEquals("1*(1+1)*1", calculator.addMultiplySymbolBeforeAndAfterBracketsIfInputStringDoesNotHaveAnyMathSymbolThere("1(1+1)1"));
     }
     @Test
     void firstCorrectLastSignFalse() {
-        assertFalse(Calculator.firstCorrect("1+"));
+        Calculator calculator = new Calculator();
+        assertFalse(calculator.inputStringIsCorrect("1+"));
     }
     @Test
     void firstCorrectTrue() {
-        assertTrue(Calculator.firstCorrect("1+1"));
+        Calculator calculator = new Calculator();
+        assertTrue(calculator.inputStringIsCorrect("1+1"));
     }
     @Test
     void checkEmptyExampleTrue() {
-        assertTrue(Calculator.checkEmptyExample(""));
+        Calculator calculator = new Calculator();
+        assertTrue(calculator.inputStringIsEmpty(""));
     }
     @Test
     void checkEmptyExampleFalse() {
-        assertFalse(Calculator.checkEmptyExample("1"));
+        Calculator calculator = new Calculator();
+        assertFalse(calculator.inputStringIsEmpty("1"));
     }
-    @Test
+    /*@Test
     void checkBracketsTrue() {
-        assertTrue(Calculator.checkBrackets("1+(1+1)"));
+        Calculator calculator = new Calculator();
+        assertTrue(calculator.s("1+(1+1)"));
     }
     @Test
     void checkBracketsFalse() {
@@ -352,5 +357,5 @@ class CalculatorUnitTest {
         InputStream in = new ByteArrayInputStream(input.getBytes());
         System.setIn(in);
         assertEquals("Infinity", Calculator.checkExample());
-    }
+    }*/
 }
