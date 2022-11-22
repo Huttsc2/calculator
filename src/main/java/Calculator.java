@@ -4,12 +4,12 @@ public  class Calculator {
     public static void main(String[] args) {
         Calculator calculator = new Calculator();
         String stringToCount;
-        stringToCount = calculator.inputStringAndCheckIt();
-        stringToCount = calculator.countStringWhileItHasBrackets(stringToCount);
-        stringToCount = calculator.countStringWithoutBrackets(stringToCount);
+        stringToCount = calculator.addStringAndCheckIt();
+        stringToCount = calculator.countWhileHasBrackets(stringToCount);
+        stringToCount = calculator.countWithoutBrackets(stringToCount);
         System.out.println(stringToCount);
     }
-    public String inputStringAndCheckIt() {
+    public String addStringAndCheckIt() {
         String inputString = null;
         boolean isCorrect = false;
         Scanner sc = new Scanner(System.in);
@@ -18,44 +18,43 @@ public  class Calculator {
         System.out.println("'.' '/' '*' '-' '+' '(' ')'");
         while (!isCorrect) {
             inputString = sc.nextLine().replaceAll(" ", "");
-            isCorrect = inputStringIsCorrect(inputString);
+            isCorrect = checkInputIsCorrect(inputString);
             if (!isCorrect) {
                 System.out.println("incorrect example, try again");
-                isCorrect = inputStringIsCorrect(inputString);
+                isCorrect = checkInputIsCorrect(inputString);
             }
         }
         sc.close();
-        inputString = addMultiplySymbolBeforeAndAfterBracketsIfInputStringDoesNotHaveAnyMathSymbolThere(inputString);
-        if (stringIncludeDivisionByZero(inputString))
+        inputString = addMultiplySymbolBeforeAndAfterBrackets(inputString);
+        if (checkHasDivisionByZero(inputString))
             inputString = "Infinity";
         return inputString;
     }
-    public String countStringWhileItHasBrackets(String stringToCount) {
+    public String countWhileHasBrackets(String stringToCount) {
         String remainderAfterClosedBracket;
         String substringInBrackets;
         String solvedSubstringInBrackets;
-        while (!stringHasSubstringInfinity(stringToCount) &&
-                (stringHasBracketsWithNoSingleNumber(stringToCount) || stringHasABracket(stringToCount))) {
-            substringInBrackets = firstClosedBracketsInString(stringToCount);
-            remainderAfterClosedBracket = stringToCount.substring(localizeEndPositionOfFirstClosedBracketsInString(stringToCount) + 1);
-            if (!stringHasMoreThanSingleNumber(substringInBrackets) && Double.parseDouble(substringInBrackets) >= 0) {
-                stringToCount = openBracketsWithAPositiveNumber(stringToCount);
+        while (!checkSubstringInfinity(stringToCount) && checkHasBracket(stringToCount)) {
+            substringInBrackets = localizeClosedBrackets(stringToCount);
+            remainderAfterClosedBracket = stringToCount.substring(localizeEndPositionBrackets(stringToCount)+1);
+            if (!checkHasMoreThanSingleNumber(substringInBrackets) && Double.parseDouble(substringInBrackets) >= 0) {
+                stringToCount = openBracketsWithPositiveNumber(stringToCount);
                 continue;
             }
-            if (!stringHasMoreThanSingleNumber(substringInBrackets) && Double.parseDouble(substringInBrackets) < 0) {
-                stringToCount = openBracketsWithASingleNegativeNumber(stringToCount);
+            if (!checkHasMoreThanSingleNumber(substringInBrackets) && Double.parseDouble(substringInBrackets) < 0) {
+                stringToCount = openBracketsWithSingleNegativeNumber(stringToCount);
                 continue;
             }
-            if (!stringHasSubstringInfinity(stringToCount) && stringHasMoreThanTwoNumbers(substringInBrackets)) {
+            if (!checkSubstringInfinity(stringToCount) && checkHasMoreThanTwoNumbers(substringInBrackets)) {
                 int substringLength = substringInBrackets.length()+1;
-                substringInBrackets = substringInBrackets.substring(0, startingPositionToCount(substringInBrackets)) +
+                substringInBrackets = substringInBrackets.substring(0, localizeStartingPositionToCount(substringInBrackets)) +
                         countSubstring(localizeSubstringToCount(substringInBrackets)) +
-                        substringInBrackets.substring(endingPositionToCount(substringInBrackets));
+                        substringInBrackets.substring(localizeEndingPositionToCount(substringInBrackets));
                 stringToCount = stringToCount.substring(0, stringToCount.length()-remainderAfterClosedBracket.length()-substringLength) +
                         substringInBrackets + stringToCount.substring(stringToCount.length()-remainderAfterClosedBracket.length()-1);
                 continue;
             }
-            if (stringHasMoreThanSingleNumber(substringInBrackets)) {
+            if (checkHasMoreThanSingleNumber(substringInBrackets)) {
                 solvedSubstringInBrackets = countSubstring(substringInBrackets);
                 stringToCount = stringToCount.substring(0, stringToCount.length()-remainderAfterClosedBracket.length()-substringInBrackets.length()-1)
                         + solvedSubstringInBrackets + stringToCount.substring(stringToCount.length()-remainderAfterClosedBracket.length()-1);
@@ -63,29 +62,41 @@ public  class Calculator {
         }
         return stringToCount;
     }
-    public String countStringWithoutBrackets(String stringToCount) {
+    public String countWithoutBrackets(String stringToCount) {
         String substringInBrackets, solvedSubstringInBrackets;
-        while (!stringHasSubstringInfinity(stringToCount) && stringHasMoreThanSingleNumber(stringToCount)) {
+        while (!checkSubstringInfinity(stringToCount) && checkHasMoreThanSingleNumber(stringToCount)) {
             substringInBrackets = localizeSubstringToCount(stringToCount);
             solvedSubstringInBrackets = countSubstring(substringInBrackets);
-            if (stringHasMoreThanTwoNumbers(stringToCount))
-                stringToCount = stringToCount.substring(0, startingPositionToCount(stringToCount)) +
-                        solvedSubstringInBrackets + stringToCount.substring(endingPositionToCount(stringToCount));
+            if (checkHasMoreThanTwoNumbers(stringToCount))
+                stringToCount = stringToCount.substring(0, localizeStartingPositionToCount(stringToCount)) +
+                        solvedSubstringInBrackets + stringToCount.substring(localizeEndingPositionToCount(stringToCount));
             else
                  stringToCount = countSubstring(stringToCount);
         }
-        if (stringHasSubstringInfinity(stringToCount)) {
+        if (checkSubstringInfinity(stringToCount)) {
             stringToCount = "division by zero error";
         }
         return stringToCount;
     }
-    public String openBracketsWithAPositiveNumber(String stringToOpenBrackets) {
-        while (!stringHasSubstringInfinity(stringToOpenBrackets) && stringHasPositiveNumbersInBrackets(stringToOpenBrackets)) {
-            stringToOpenBrackets = openBracketsWithASinglePositiveNumber(stringToOpenBrackets);
+    public boolean checkInputIsCorrect(String stringToCheck) {
+        if (checkInputIsEmpty(stringToCheck))
+            return false;
+        if (stringToCheck.charAt(stringToCheck.length()-1) == '-' || stringToCheck.charAt(stringToCheck.length()-1) == '+' ||
+                stringToCheck.charAt(stringToCheck.length()-1) == '/' || stringToCheck.charAt(stringToCheck.length()-1) == '*' ||
+                stringToCheck.charAt(stringToCheck.length()-1) == '(' || stringToCheck.charAt(stringToCheck.length()-1) == '.')
+            return false;
+        return  (Character.isDigit(stringToCheck.charAt(0)) || stringToCheck.charAt(0) == '-' || stringToCheck.charAt(0) == '(') &&
+                checkInputHasCorrectBrackets(stringToCheck) && checkHasOnlyCorrectSymbols(stringToCheck) &&
+                checkMathSymbolsSequence(stringToCheck) && checkFractionalNumbers(stringToCheck) &&
+                checkMathSymbolBeforeClosingBrackets(stringToCheck);
+    }
+    public String openBracketsWithPositiveNumber(String stringToOpenBrackets) {
+        while (!checkSubstringInfinity(stringToOpenBrackets) && checkPositiveNumbersInBrackets(stringToOpenBrackets)) {
+            stringToOpenBrackets = openBracketsWithSinglePositiveNumber(stringToOpenBrackets);
         }
         return stringToOpenBrackets;
     }
-    public boolean stringHasPositiveNumbersInBrackets(String stringToCheck) {
+    public boolean checkPositiveNumbersInBrackets(String stringToCheck) {
         boolean isItSingle = false;
         for (int i = 0; i < stringToCheck.length(); i++) {
             if (stringToCheck.charAt(i) == '(')
@@ -98,7 +109,7 @@ public  class Calculator {
         }
         return isItSingle;
     }
-    public String openBracketsWithASinglePositiveNumber(String stringToOpenBrackets) {
+    public String openBracketsWithSinglePositiveNumber(String stringToOpenBrackets) {
         int startPositionToOpenBrackets = 0, endPositionToOpenBrackets = 0;
         boolean isPlusNumber = false;
         while (!isPlusNumber) {
@@ -125,9 +136,9 @@ public  class Calculator {
                 stringToOpenBrackets.substring(endPositionToOpenBrackets+1);
         return stringToOpenBrackets;
     }
-    public String openBracketsWithASingleNegativeNumber(String stringToOpenBrackets) {
-        int startPosition = localizeStartPositionOfFirstClosedBracketsInString(stringToOpenBrackets);
-        int endPosition = localizeEndPositionOfFirstClosedBracketsInString(stringToOpenBrackets);
+    public String openBracketsWithSingleNegativeNumber(String stringToOpenBrackets) {
+        int startPosition = localizeStartPositionBrackets(stringToOpenBrackets);
+        int endPosition = localizeEndPositionBrackets(stringToOpenBrackets);
         int stringLengthCorrection = endPosition+1 == stringToOpenBrackets.length() ? 0 : 1;
         int startPositionCorrection = startPosition == 0 ? 0 : 1;
         String substringToCount;
@@ -202,8 +213,8 @@ public  class Calculator {
         }
         return stringToOpenBrackets;
     }
-    public boolean stringHasMoreThanTwoNumbers(String stringToCheck) {
-        int firstSymbolIsMinusCorrection = firstSymbolInStringIsMinus(stringToCheck) ? 1 : 0;
+    public boolean checkHasMoreThanTwoNumbers(String stringToCheck) {
+        int firstSymbolIsMinusCorrection = checkFirstSymbolMinus(stringToCheck) ? 1 : 0;
         int mathSymbolsCounter = 0;
         for (int i = firstSymbolIsMinusCorrection; i < stringToCheck.length(); i++) {
             if (stringToCheck.charAt(i) == '/' || stringToCheck.charAt(i) == '*' || stringToCheck.charAt(i) == '+' || stringToCheck.charAt(i) == '-')
@@ -211,20 +222,7 @@ public  class Calculator {
         }
         return mathSymbolsCounter > 1;
     }
-    public boolean stringHasBracketsWithNoSingleNumber(String stringToCheck) {
-        for (int i = 0; i < stringToCheck.length()-1; i++) {
-            int firstSymbolInBracketIsMinusCorrection = stringToCheck.charAt(i+1) == '-' ? 2 : 1;
-            if(stringToCheck.charAt(i) == '(') {
-                for (int j = i+firstSymbolInBracketIsMinusCorrection; stringToCheck.charAt(j) != ')'; j++) {
-                    if (stringToCheck.charAt(j) == '-' || stringToCheck.charAt(j) == '+' ||
-                            stringToCheck.charAt(j) == '*' || stringToCheck.charAt(j) == '/')
-                        return true;
-                }
-            }
-        }
-        return false;
-    }
-    public boolean stringHasMoreThanSingleNumber(String stringToCheck) {
+    public boolean checkHasMoreThanSingleNumber(String stringToCheck) {
         int firstIsABracketCorrection = stringToCheck.charAt(0) == '(' ? 1 : 0;
         int firstIsAMinusCorrection =
                 stringToCheck.charAt(firstIsABracketCorrection) == '-' ? 1 + firstIsABracketCorrection : firstIsABracketCorrection;
@@ -236,52 +234,51 @@ public  class Calculator {
         }
         return mathSymbolsCounter != 0;
     }
-    public boolean stringHasABracket(String stringToCheck) {
+    public boolean checkHasBracket(String stringToCheck) {
         for (int i = 0; i < stringToCheck.length(); i++) {
             if (stringToCheck.charAt(i) == '(')
                 return true;
         }
         return false;
     }
-
-    public int localizeEndPositionOfFirstClosedBracketsInString(String stringToLocolize) {
+    public int localizeStartPositionBrackets(String stringToLocalize) {
+        int startBracketsPosition = 0;
+        for (int i = 0; i < stringToLocalize.length(); i++) {
+            if (stringToLocalize.charAt(i) == '('){
+                startBracketsPosition = i;
+            }
+            if (stringToLocalize.charAt(i) == ')')
+                break;
+        }
+        return startBracketsPosition;
+    }
+    public int localizeEndPositionBrackets(String stringToLocalize) {
         int endBracketsPosition = 0;
-        for (int i = 0; i < stringToLocolize.length(); i++) {
-            if (stringToLocolize.charAt(i) == ')') {
+        for (int i = 0; i < stringToLocalize.length(); i++) {
+            if (stringToLocalize.charAt(i) == ')') {
                 endBracketsPosition = i;
                 break;
             }
         }
         return endBracketsPosition;
     }
-    public int localizeStartPositionOfFirstClosedBracketsInString(String stringToLocolize) {
-        int startBracketsPosition = 0;
-        for (int i = 0; i < stringToLocolize.length(); i++) {
-            if (stringToLocolize.charAt(i) == '('){
-                startBracketsPosition = i;
-            }
-            if (stringToLocolize.charAt(i) == ')')
-                break;
-        }
-        return startBracketsPosition;
+    public String localizeClosedBrackets(String stringToLocalize) {
+        int startBracketsPosition = localizeStartPositionBrackets(stringToLocalize);
+        int endBracketsPosition = localizeEndPositionBrackets(stringToLocalize);
+        stringToLocalize = stringToLocalize.substring(startBracketsPosition+1, endBracketsPosition);
+        return stringToLocalize;
     }
-    public String firstClosedBracketsInString(String locolizedString) {
-        int startBracketsPosition = localizeStartPositionOfFirstClosedBracketsInString(locolizedString);
-        int endBracketsPosition = localizeEndPositionOfFirstClosedBracketsInString(locolizedString);
-        locolizedString = locolizedString.substring(startBracketsPosition+1, endBracketsPosition);
-        return locolizedString;
-    }
-    public boolean firstSymbolInStringIsMinus(String stringToCheck) {
+    public boolean checkFirstSymbolMinus(String stringToCheck) {
         return stringToCheck.charAt(0) == '-';
     }
-    public boolean stringHasMultiplyOrDivideSymbol(String stringToCheck) {
+    public boolean checkMultiplyOrDivideSymbol(String stringToCheck) {
         for (int i = 0; i < stringToCheck.length(); i++) {
             if (stringToCheck.charAt(i) == '*' || stringToCheck.charAt(i) == '/')
                 return true;
         }
         return false;
     }
-    public int localizePlusOrMinusSymbolInString(String stringToLocalize) {
+    public int localizePlusOrMinusSymbol(String stringToLocalize) {
         int firstMinusSymbolCorrection = stringToLocalize.charAt(0) == '-' ? 1 : 0;
         for (int i = firstMinusSymbolCorrection; i < stringToLocalize.length(); i++) {
             if (stringToLocalize.charAt(i) == '+' || stringToLocalize.charAt(i) == '-') {
@@ -291,7 +288,7 @@ public  class Calculator {
         }
         return firstMinusSymbolCorrection;
     }
-    public int localizeMultipleOrDivideSymbolInString(String stringToLocalize) {
+    public int localizeMultipleOrDivideSymbol(String stringToLocalize) {
         int positionOfMultiplySymbol = 0;
         for (int i = 0; i < stringToLocalize.length(); i++) {
             if (stringToLocalize.charAt(i) == '*' || stringToLocalize.charAt(i) == '/') {
@@ -302,17 +299,17 @@ public  class Calculator {
         return positionOfMultiplySymbol;
     }
     public String localizeSubstringToCount(String stringToLocalize) {
-        stringToLocalize = stringToLocalize.substring(startingPositionToCount(stringToLocalize), endingPositionToCount(stringToLocalize));
+        stringToLocalize = stringToLocalize.substring(localizeStartingPositionToCount(stringToLocalize), localizeEndingPositionToCount(stringToLocalize));
         return stringToLocalize;
     }
-    public boolean mathSymbolInSubstringIsFirstMathSymbolInString(String stringToCheck) {
+    public boolean checkMathSymbolInSubstringIsFirstMathSymbol(String stringToCheck) {
         int firstIsBracketsCorrection = stringToCheck.charAt(0) == '(' ? 1 : 0;
         int firstIsMinusSymbolCorrection = stringToCheck.charAt(firstIsBracketsCorrection) == '-' ? 1 : 0;
         int mathSymbolCounter = 0;
-        if (stringHasMultiplyOrDivideSymbol(stringToCheck)) {
-            firstIsBracketsCorrection = localizeMultipleOrDivideSymbolInString(stringToCheck);
+        if (checkMultiplyOrDivideSymbol(stringToCheck)) {
+            firstIsBracketsCorrection = localizeMultipleOrDivideSymbol(stringToCheck);
         } else {
-            firstIsBracketsCorrection = localizePlusOrMinusSymbolInString(stringToCheck);
+            firstIsBracketsCorrection = localizePlusOrMinusSymbol(stringToCheck);
         }
         for (int i = firstIsMinusSymbolCorrection; i < firstIsBracketsCorrection; i++) {
             if (stringToCheck.charAt(i) == '/' || stringToCheck.charAt(i) == '*' ||
@@ -322,13 +319,13 @@ public  class Calculator {
         }
         return mathSymbolCounter == 0;
     }
-    public boolean mathSymbolInSubstringIsLastMathSymbolInString(String stringToCheck) {
+    public boolean checkMathSymbolInSubstringIsLastMathSymbol(String stringToCheck) {
         int positionOfMathSymbol;
         int mathSymbolCounter = 0;
-        if (stringHasMultiplyOrDivideSymbol(stringToCheck)) {
-            positionOfMathSymbol = localizeMultipleOrDivideSymbolInString(stringToCheck);
+        if (checkMultiplyOrDivideSymbol(stringToCheck)) {
+            positionOfMathSymbol = localizeMultipleOrDivideSymbol(stringToCheck);
         } else {
-            positionOfMathSymbol = localizePlusOrMinusSymbolInString(stringToCheck);
+            positionOfMathSymbol = localizePlusOrMinusSymbol(stringToCheck);
         }
         for (int i = positionOfMathSymbol+1; i < stringToCheck.length(); i++) {
             if (stringToCheck.charAt(i) == '/' || stringToCheck.charAt(i) == '*' ||
@@ -338,14 +335,14 @@ public  class Calculator {
         }
         return mathSymbolCounter == 0;
     }
-    public int startingPositionToCount(String stringToLocalize) {
+    public int localizeStartingPositionToCount(String stringToLocalize) {
         int startingPosition;
-        if (stringHasMultiplyOrDivideSymbol(stringToLocalize)) {
-            startingPosition = localizeMultipleOrDivideSymbolInString(stringToLocalize);
+        if (checkMultiplyOrDivideSymbol(stringToLocalize)) {
+            startingPosition = localizeMultipleOrDivideSymbol(stringToLocalize);
         } else {
-            startingPosition = localizePlusOrMinusSymbolInString(stringToLocalize);
+            startingPosition = localizePlusOrMinusSymbol(stringToLocalize);
         }
-        if (mathSymbolInSubstringIsFirstMathSymbolInString(stringToLocalize)) {
+        if (checkMathSymbolInSubstringIsFirstMathSymbol(stringToLocalize)) {
             startingPosition = 0;
             return startingPosition;
         }
@@ -357,14 +354,14 @@ public  class Calculator {
         }
         return startingPosition;
     }
-    public int endingPositionToCount(String stringToLocalize) {
+    public int localizeEndingPositionToCount(String stringToLocalize) {
         int endingPosition;
-        if (stringHasMultiplyOrDivideSymbol(stringToLocalize)) {
-            endingPosition = localizeMultipleOrDivideSymbolInString(stringToLocalize);
+        if (checkMultiplyOrDivideSymbol(stringToLocalize)) {
+            endingPosition = localizeMultipleOrDivideSymbol(stringToLocalize);
         } else {
-            endingPosition = localizePlusOrMinusSymbolInString(stringToLocalize);
+            endingPosition = localizePlusOrMinusSymbol(stringToLocalize);
         }
-        if (mathSymbolInSubstringIsLastMathSymbolInString(stringToLocalize)) {
+        if (checkMathSymbolInSubstringIsLastMathSymbol(stringToLocalize)) {
             endingPosition = stringToLocalize.length();
             return endingPosition;
         }
@@ -375,28 +372,28 @@ public  class Calculator {
         }
         return endingPosition;
     }
-    public boolean stringHasMultiplySymbol(String stringToCheck) {
+    public boolean checkHasMultiplySymbol(String stringToCheck) {
         for (int i = 0; i < stringToCheck.length(); i++) {
             if (stringToCheck.charAt(i) == '*')
                 return true;
         }
         return false;
     }
-    public boolean stringHasDivideSymbol(String stringToCheck) {
+    public boolean checkHasDivideSymbol(String stringToCheck) {
         for (int i = 0; i < stringToCheck.length(); i++) {
             if (stringToCheck.charAt(i) == '/')
                 return true;
         }
         return false;
     }
-    public boolean stringHasPlusSymbol(String stringToCheck) {
+    public boolean checkHasPlusSymbol(String stringToCheck) {
         for (int i = 0; i < stringToCheck.length(); i++) {
             if (stringToCheck.charAt(i) == '+')
                 return true;
         }
         return false;
     }
-    public boolean stringHasMinusSymbol(String stringToCheck) {
+    public boolean checkHasMinusSymbol(String stringToCheck) {
         int x = stringToCheck.charAt(0) == '-' ? 1 : 0;
         for (int i = x; i < stringToCheck.length(); i++) {
             if (stringToCheck.charAt(i) == '-')
@@ -406,47 +403,35 @@ public  class Calculator {
     }
     public String countSubstring(String stringToCount) {
         double firstNumber, secondNumber;
-        if (stringHasMultiplyOrDivideSymbol(stringToCount)) {
-            firstNumber = Double.parseDouble(stringToCount.substring(0, localizeMultipleOrDivideSymbolInString(stringToCount)));
-            secondNumber = Double.parseDouble(stringToCount.substring(localizeMultipleOrDivideSymbolInString(stringToCount) + 1));
+        if (checkMultiplyOrDivideSymbol(stringToCount)) {
+            firstNumber = Double.parseDouble(stringToCount.substring(0, localizeMultipleOrDivideSymbol(stringToCount)));
+            secondNumber = Double.parseDouble(stringToCount.substring(localizeMultipleOrDivideSymbol(stringToCount) + 1));
         } else {
-            firstNumber = Double.parseDouble(stringToCount.substring(0, localizePlusOrMinusSymbolInString(stringToCount)));
-            secondNumber = Double.parseDouble(stringToCount.substring(localizePlusOrMinusSymbolInString(stringToCount) + 1));
+            firstNumber = Double.parseDouble(stringToCount.substring(0, localizePlusOrMinusSymbol(stringToCount)));
+            secondNumber = Double.parseDouble(stringToCount.substring(localizePlusOrMinusSymbol(stringToCount) + 1));
         }
-        if (stringHasMultiplySymbol(stringToCount)) {
+        if (checkHasMultiplySymbol(stringToCount)) {
             firstNumber*=secondNumber;
             stringToCount = Double.toString(firstNumber);
             return stringToCount;
-        } else if (stringHasDivideSymbol(stringToCount)) {
+        } else if (checkHasDivideSymbol(stringToCount)) {
             firstNumber/=secondNumber;
             stringToCount = Double.toString(firstNumber);
             return stringToCount;
-        } else if (stringHasPlusSymbol(stringToCount)) {
+        } else if (checkHasPlusSymbol(stringToCount)) {
             firstNumber+=secondNumber;
             stringToCount = Double.toString(firstNumber);
             return stringToCount;
-        } else if (stringHasMinusSymbol(stringToCount)) {
+        } else if (checkHasMinusSymbol(stringToCount)) {
             firstNumber-=secondNumber;
             stringToCount = Double.toString(firstNumber);
         }
         return stringToCount;
     }
-    public boolean inputStringIsCorrect(String stringToCheck) {
-        if (inputStringIsEmpty(stringToCheck))
-            return false;
-        if (stringToCheck.charAt(stringToCheck.length()-1) == '-' || stringToCheck.charAt(stringToCheck.length()-1) == '+' ||
-                stringToCheck.charAt(stringToCheck.length()-1) == '/' || stringToCheck.charAt(stringToCheck.length()-1) == '*' ||
-                stringToCheck.charAt(stringToCheck.length()-1) == '(' || stringToCheck.charAt(stringToCheck.length()-1) == '.')
-            return false;
-        return  (Character.isDigit(stringToCheck.charAt(0)) || stringToCheck.charAt(0) == '-' || stringToCheck.charAt(0) == '(') &&
-                inputStringHasCorrectBrackets(stringToCheck) && inputStringHasOnlyCorrectSymbols(stringToCheck) &&
-                inputStringDoesNotHaveMathSymbolsInARow(stringToCheck) && inputStringHasCorrectFractionalNumbers(stringToCheck) &&
-                inputStringDoesNotHaveMathSymbolBeforeClosingBrackets(stringToCheck);
-    }
-    public boolean inputStringIsEmpty(String stringToCheck) {
+    public boolean checkInputIsEmpty(String stringToCheck) {
         return stringToCheck.length() == 0;
     }
-    public boolean stringIncludeDivisionByZero(String stringToCheck) {
+    public boolean checkHasDivisionByZero(String stringToCheck) {
         for (int i = 1; i < stringToCheck.length()-1; i++) {
             if (stringToCheck.charAt(i) == '/' && stringToCheck.charAt(i+1) == '0') {
                 if (stringToCheck.length() == i+2)
@@ -457,7 +442,7 @@ public  class Calculator {
         }
         return false;
     }
-    public boolean inputStringHasCorrectBrackets(String stringToCheck) {
+    public boolean checkInputHasCorrectBrackets(String stringToCheck) {
         int bracketsCounter = 0;
         boolean isFirstRightBracket = false;
         for (int i = 0; i < stringToCheck.length(); i++) {
@@ -470,7 +455,7 @@ public  class Calculator {
         }
         return bracketsCounter == 0;
     }
-    public boolean inputStringDoesNotHaveMathSymbolBeforeClosingBrackets(String stringToCheck) {
+    public boolean checkMathSymbolBeforeClosingBrackets(String stringToCheck) {
         for (int i = 0; i < stringToCheck.length(); i++) {
             if (stringToCheck.charAt(i) == ')' && (stringToCheck.charAt(i-1) == '-' ||
                     stringToCheck.charAt(i-1) == '+' || stringToCheck.charAt(i-1) == '*' ||
@@ -479,7 +464,7 @@ public  class Calculator {
         }
         return true;
     }
-    public boolean inputStringHasOnlyCorrectSymbols(String stringToCheck) {
+    public boolean checkHasOnlyCorrectSymbols(String stringToCheck) {
         int symbolsCounter = 0;
         for (int i = 0; i < stringToCheck.length(); i++) {
             if (Character.isDigit(stringToCheck.charAt(i)) || stringToCheck.charAt(i) == '-' || stringToCheck.charAt(i) == '+' || stringToCheck.charAt(i) == '/'
@@ -488,7 +473,7 @@ public  class Calculator {
         }
         return symbolsCounter == stringToCheck.length();
     }
-    public boolean inputStringDoesNotHaveMathSymbolsInARow(String stringToCheck) {
+    public boolean checkMathSymbolsSequence(String stringToCheck) {
         for (int i = 1; i < stringToCheck.length(); i++) {
             if (stringToCheck.charAt(i-1) == '-' || stringToCheck.charAt(i-1) == '+' || stringToCheck.charAt(i-1) == '/' || stringToCheck.charAt(i-1) == '*') {
                 if (stringToCheck.charAt(i) == '-' || stringToCheck.charAt(i) == '+' || stringToCheck.charAt(i) == '/' || stringToCheck.charAt(i) == '*') {
@@ -498,7 +483,7 @@ public  class Calculator {
         }
         return true;
     }
-    public String addMultiplySymbolBeforeAndAfterBracketsIfInputStringDoesNotHaveAnyMathSymbolThere(String stringToAdd) {
+    public String addMultiplySymbolBeforeAndAfterBrackets(String stringToAdd) {
         StringBuilder ns = new StringBuilder(stringToAdd);
         for (int i = 1; i < stringToAdd.length(); i++) {
             if (stringToAdd.charAt(i) == '(' && (Character.isDigit(stringToAdd.charAt(i-1)) || stringToAdd.charAt(i-1) == ')')) {
@@ -516,7 +501,7 @@ public  class Calculator {
         stringToAdd = ns.toString();
         return stringToAdd;
     }
-    public boolean inputStringHasCorrectFractionalNumbers(String stringToCheck) {
+    public boolean checkFractionalNumbers(String stringToCheck) {
         stringToCheck = stringToCheck.replaceAll("[-+*()/]", " ").replaceAll("[\\s]{2,}", " ");
         String[] d = stringToCheck.split(" ");
         int x = 0;
@@ -534,7 +519,7 @@ public  class Calculator {
         }
         return true;
     }
-    public boolean stringHasSubstringInfinity(String stringToCheck) {
+    public boolean checkSubstringInfinity(String stringToCheck) {
         String con = "Infinity";
         return (stringToCheck.contains(con));
     }
