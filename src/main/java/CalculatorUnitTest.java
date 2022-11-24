@@ -2,7 +2,6 @@ import org.junit.jupiter.api.Test;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
-
 import static org.junit.jupiter.api.Assertions.*;
 
 class CalculatorUnitTest {
@@ -177,9 +176,131 @@ class CalculatorUnitTest {
     @Test
     void openBracketsAfterMultiplyOrDivide() {
         Calculator calculator = new Calculator();
-        String input = "1+(2*(-2))-2";
-        String expectedResult = "1+((-4.0))-2";
+        String input = "1+(1-2*(-2)+1)-2";
+        String expectedResult = "1+(1-(-4.0)+1)-2";
         String actualResult = calculator.openBracketsWithSingleNegativeNumber(input);
+        assertEquals(expectedResult, actualResult);
+    }
+    @Test
+    void openBracketsBeforeMultiplyOrDivide() {
+        Calculator calculator = new Calculator();
+        String input = "1+(1+(-2)*2+1)-2";
+        String expectedResult = "1+(1-2*2+1)-2";
+        String actualResult = calculator.openBracketsWithSingleNegativeNumber(input);
+        assertEquals(expectedResult, actualResult);
+    }
+    @Test
+    void moreThanTwoNumbers() {
+        Calculator calculator = new Calculator();
+        String input = "1+2+3";
+        assertTrue(calculator.checkHasMoreThanTwoNumbers(input));
+    }
+    @Test
+    void twoOrLessNumbers() {
+        Calculator calculator = new Calculator();
+        String input = "-2+3";
+        assertFalse(calculator.checkHasMoreThanTwoNumbers(input));
+    }
+    @Test
+    void startPositionToCount() {
+        Calculator calculator = new Calculator();
+        String input = "1+2*3+4";
+        int expectedResult = 2;
+        int actualResult = calculator.localizeStartingPositionToCount(input);
+        assertEquals(expectedResult, actualResult);
+    }
+    @Test
+    void endPositionToCount() {
+        Calculator calculator = new Calculator();
+        String input = "1+2*3+4";
+        int expectedResult = 5;
+        int actualResult = calculator.localizeEndingPositionToCount(input);
+        assertEquals(expectedResult, actualResult);
+    }
+    @Test
+    void substringToCount() {
+        Calculator calculator = new Calculator();
+        String input = "1+2*3+4";
+        String expectedResult = "2*3";
+        String actualResult = calculator.localizeSubstringToCount(input);
+        assertEquals(expectedResult, actualResult);
+    }
+    @Test
+    void multiplyOrDivideSymbol() {
+        Calculator calculator = new Calculator();
+        String input = "1+2*3+4";
+        assertTrue(calculator.checkMultiplyOrDivideSymbol(input));
+    }
+    @Test
+    void multiplyOrDivideSymbolPosition() {
+        Calculator calculator = new Calculator();
+        String input = "1+2*3+4";
+        int expectedResult = 3;
+        int actualResult = calculator.localizeMultipleOrDivideSymbol(input);
+        assertEquals(expectedResult, actualResult);
+    }
+    @Test
+    void plusOrMinusSymbolPosition() {
+        Calculator calculator = new Calculator();
+        String input = "1+2*3+4";
+        int expectedResult = 1;
+        int actualResult = calculator.localizePlusOrMinusSymbol(input);
+        assertEquals(expectedResult, actualResult);
+    }
+    @Test
+    void multiplySymbol() {
+        Calculator calculator = new Calculator();
+        String input = "2*3";
+        assertTrue(calculator.checkHasMultiplySymbol(input));
+    }
+    @Test
+    void divideSymbol() {
+        Calculator calculator = new Calculator();
+        String input = "2/3";
+        assertTrue(calculator.checkHasDivideSymbol(input));
+    }
+    @Test
+    void minusSymbol() {
+        Calculator calculator = new Calculator();
+        String input = "2-3";
+        assertTrue(calculator.checkHasMinusSymbol(input));
+    }
+    @Test
+    void plusSymbol() {
+        Calculator calculator = new Calculator();
+        String input = "3+4";
+        assertTrue(calculator.checkHasPlusSymbol(input));
+    }
+    @Test
+    void multiplySubstring() {
+        Calculator calculator = new Calculator();
+        String input = "-2*3";
+        String expectedResult = "-6.0";
+        String actualResult = calculator.countSubstring(input);
+        assertEquals(expectedResult, actualResult);
+    }
+    @Test
+    void divideSubstring() {
+        Calculator calculator = new Calculator();
+        String input = "6/3";
+        String expectedResult = "2.0";
+        String actualResult = calculator.countSubstring(input);
+        assertEquals(expectedResult, actualResult);
+    }
+    @Test
+    void minusSubstring() {
+        Calculator calculator = new Calculator();
+        String input = "2-3";
+        String expectedResult = "-1.0";
+        String actualResult = calculator.countSubstring(input);
+        assertEquals(expectedResult, actualResult);
+    }
+    @Test
+    void plusSubstring() {
+        Calculator calculator = new Calculator();
+        String input = "-6+-3";
+        String expectedResult = "-9.0";
+        String actualResult = calculator.countSubstring(input);
         assertEquals(expectedResult, actualResult);
     }
 }
