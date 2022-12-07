@@ -303,4 +303,26 @@ class CalculatorUnitTest {
         String actualResult = calculator.countSubstring(input);
         assertEquals(expectedResult, actualResult);
     }
+    @Test
+    void minusSingleNumberInBracketsLastInString() {
+        Calculator calculator = new Calculator();
+        String input = "6-(-3)";
+        String expectedResult = "6+3";
+        String actualResult = calculator.openBracketsWithSingleNegativeNumber(input);
+        assertEquals(expectedResult, actualResult);
+    }
+    @Test
+    void minusSingleNumberInBracketsFirstInString() {
+        Calculator calculator = new Calculator();
+        String input = "(-3)+6";
+        String expectedResult = "-3+6";
+        String actualResult = calculator.openBracketsWithSingleNegativeNumber(input);
+        assertEquals(expectedResult, actualResult);
+    }
+    @Test
+    void correctMathSymbolAfterOpenedBracket() {
+        Calculator calculator = new Calculator();
+        String input = "1+(1)";
+        assertTrue(calculator.checkMathSymbolAfterOpenedBracket(input));
+    }
 }

@@ -33,7 +33,7 @@ public  class Calculator {
     public String countWhileHasBrackets(String stringToCount) {
         String remainderAfterClosedBracket;
         String substringInBrackets;
-        String solvedSubstringInBrackets;
+        String countedSubstringInBrackets;
         while (!checkSubstringInfinity(stringToCount) && checkHasBracket(stringToCount)) {
             substringInBrackets = localizeClosedBrackets(stringToCount);
             remainderAfterClosedBracket = stringToCount.substring(localizeEndPositionBrackets(stringToCount)+1);
@@ -55,9 +55,9 @@ public  class Calculator {
                 continue;
             }
             if (checkHasMoreThanSingleNumber(substringInBrackets)) {
-                solvedSubstringInBrackets = countSubstring(substringInBrackets);
+                countedSubstringInBrackets = countSubstring(substringInBrackets);
                 stringToCount = stringToCount.substring(0, stringToCount.length()-remainderAfterClosedBracket.length()-substringInBrackets.length()-1)
-                        + solvedSubstringInBrackets + stringToCount.substring(stringToCount.length()-remainderAfterClosedBracket.length()-1);
+                        + countedSubstringInBrackets + stringToCount.substring(stringToCount.length()-remainderAfterClosedBracket.length()-1);
             }
         }
         return stringToCount;
@@ -81,14 +81,13 @@ public  class Calculator {
     public boolean checkInputIsCorrect(String stringToCheck) {
         if (checkInputIsEmpty(stringToCheck))
             return false;
-        if (stringToCheck.charAt(stringToCheck.length()-1) == '-' || stringToCheck.charAt(stringToCheck.length()-1) == '+' ||
-                stringToCheck.charAt(stringToCheck.length()-1) == '/' || stringToCheck.charAt(stringToCheck.length()-1) == '*' ||
-                stringToCheck.charAt(stringToCheck.length()-1) == '(' || stringToCheck.charAt(stringToCheck.length()-1) == '.')
-            return false;
         return  (Character.isDigit(stringToCheck.charAt(0)) || stringToCheck.charAt(0) == '-' || stringToCheck.charAt(0) == '(') &&
                 checkInputHasCorrectBrackets(stringToCheck) && checkHasOnlyCorrectSymbols(stringToCheck) &&
                 checkMathSymbolsSequence(stringToCheck) && checkFractionalNumbers(stringToCheck) &&
-                checkMathSymbolBeforeClosingBrackets(stringToCheck);
+                checkMathSymbolBeforeClosingBrackets(stringToCheck) && checkMathSymbolAfterOpenedBracket(stringToCheck) &&
+                (stringToCheck.charAt(stringToCheck.length()-1) != '-' && stringToCheck.charAt(stringToCheck.length()-1) != '+' &&
+                stringToCheck.charAt(stringToCheck.length()-1) != '/' && stringToCheck.charAt(stringToCheck.length()-1) != '*' &&
+                stringToCheck.charAt(stringToCheck.length()-1) != '(' && stringToCheck.charAt(stringToCheck.length()-1) != '.');
     }
     public String openBracketsWithPositiveNumber(String stringToOpenBrackets) {
         while (!checkSubstringInfinity(stringToOpenBrackets) && checkPositiveNumbersInBrackets(stringToOpenBrackets)) {
@@ -139,42 +138,48 @@ public  class Calculator {
     public String openBracketsWithSingleNegativeNumber(String stringToOpenBrackets) {
         int startPosition = localizeStartPositionBrackets(stringToOpenBrackets);
         int endPosition = localizeEndPositionBrackets(stringToOpenBrackets);
-        int stringLengthCorrection = endPosition+1 == stringToOpenBrackets.length() ? 0 : 1;
-        int startPositionCorrection = startPosition == 0 ? 0 : 1;
-        String substringToCount;
-        if (stringToOpenBrackets.charAt(startPosition-startPositionCorrection) == '+') {
+        if (startPosition == 0) {
+            stringToOpenBrackets = stringToOpenBrackets.substring(startPosition + 1, endPosition) + stringToOpenBrackets.substring(endPosition + 1);
+        } else if (stringToOpenBrackets.charAt(startPosition-1) == '+') {
             stringToOpenBrackets = stringToOpenBrackets.substring(0, startPosition-1) +
                     stringToOpenBrackets.substring(startPosition+1, endPosition) + stringToOpenBrackets.substring(endPosition+1);
-        } else if (stringToOpenBrackets.charAt(startPosition-startPositionCorrection) == '-' && stringToOpenBrackets.charAt(startPosition-2) == '(') {
-            stringToOpenBrackets = stringToOpenBrackets.substring(0,startPosition-startPositionCorrection) +
+        } else if (stringToOpenBrackets.charAt(startPosition-1) == '-' && stringToOpenBrackets.charAt(startPosition-2) == '(') {
+            stringToOpenBrackets = stringToOpenBrackets.substring(0,startPosition-1) +
                     stringToOpenBrackets.substring(startPosition+2, endPosition) + stringToOpenBrackets.substring(endPosition+1);
-        }else if (stringToOpenBrackets.charAt(startPosition-startPositionCorrection) == '-') {
-            stringToOpenBrackets = stringToOpenBrackets.substring(0,startPosition-startPositionCorrection) + '+' +
-                    stringToOpenBrackets.substring(startPosition+2, endPosition) + stringToOpenBrackets.substring(endPosition+stringLengthCorrection);
-        } else if (stringToOpenBrackets.charAt(startPosition-startPositionCorrection) == '(') {
+        }else if (stringToOpenBrackets.charAt(startPosition-1) == '-') {
+            stringToOpenBrackets = stringToOpenBrackets.substring(0,startPosition-1) + '+' +
+                    stringToOpenBrackets.substring(startPosition+2, endPosition) + stringToOpenBrackets.substring(endPosition+1);
+        } else if (stringToOpenBrackets.charAt(startPosition-1) == '(') {
             stringToOpenBrackets = stringToOpenBrackets.substring(0,startPosition) +
                     stringToOpenBrackets.substring(startPosition+1, endPosition) + stringToOpenBrackets.substring(endPosition+1);
-        }  else if (stringToOpenBrackets.charAt(startPosition-startPositionCorrection) == '*' ||
-                stringToOpenBrackets.charAt(startPosition-startPositionCorrection) == '/') {
-            int startPositionIncludingBrackets = 0;
-            for (int i = startPosition-2; i > 0; i--) {
-                if (stringToOpenBrackets.charAt(i) == '+' || stringToOpenBrackets.charAt(i) == '/' ||
-                        stringToOpenBrackets.charAt(i) == '*' || stringToOpenBrackets.charAt(i) == '(') {
-                    startPositionIncludingBrackets = i+1;
-                    break;
-                } else if (stringToOpenBrackets.charAt(i) == '-' &&  Character.isDigit(stringToOpenBrackets.charAt(i-1))){
-                    startPositionIncludingBrackets = i+1;
-                    break;
-                } else if (stringToOpenBrackets.charAt(i) == '-') {
-                    startPositionIncludingBrackets = i;
-                    break;
-                }
-            }
-            substringToCount = stringToOpenBrackets.substring(startPositionIncludingBrackets, endPosition).replaceAll("[)(]", "");
-            substringToCount = countSubstring(substringToCount);
-            stringToOpenBrackets = stringToOpenBrackets.substring(0, startPositionIncludingBrackets) +
-                    '(' + substringToCount + stringToOpenBrackets.substring(endPosition);
+        }  else if (stringToOpenBrackets.charAt(startPosition-1) == '*' ||
+                stringToOpenBrackets.charAt(startPosition-1) == '/') {
+            stringToOpenBrackets = countSubstringWithMinusSingleNumberAfterDivideOrMultiply(stringToOpenBrackets);
         }
+        return stringToOpenBrackets;
+    }
+    public String countSubstringWithMinusSingleNumberAfterDivideOrMultiply(String stringToOpenBrackets) {
+        int startPositionIncludingBrackets = 0;
+        int startPosition = localizeStartPositionBrackets(stringToOpenBrackets);
+        int endPosition = localizeEndPositionBrackets(stringToOpenBrackets);
+        String substringToCount;
+        for (int i = startPosition-2; i > 0; i--) {
+            if (stringToOpenBrackets.charAt(i) == '+' || stringToOpenBrackets.charAt(i) == '/' ||
+                    stringToOpenBrackets.charAt(i) == '*' || stringToOpenBrackets.charAt(i) == '(') {
+                startPositionIncludingBrackets = i+1;
+                break;
+            } else if (stringToOpenBrackets.charAt(i) == '-' &&  Character.isDigit(stringToOpenBrackets.charAt(i-1))){
+                startPositionIncludingBrackets = i+1;
+                break;
+            } else if (stringToOpenBrackets.charAt(i) == '-') {
+                startPositionIncludingBrackets = i;
+                break;
+            }
+        }
+        substringToCount = stringToOpenBrackets.substring(startPositionIncludingBrackets, endPosition).replaceAll("[)(]", "");
+        substringToCount = countSubstring(substringToCount);
+        stringToOpenBrackets = stringToOpenBrackets.substring(0, startPositionIncludingBrackets) +
+                '(' + substringToCount + stringToOpenBrackets.substring(endPosition);
         return stringToOpenBrackets;
     }
     public boolean checkHasMoreThanTwoNumbers(String stringToCheck) {
@@ -443,6 +448,14 @@ public  class Calculator {
                 if (stringToCheck.charAt(i) == '-' || stringToCheck.charAt(i) == '+' || stringToCheck.charAt(i) == '/' || stringToCheck.charAt(i) == '*') {
                     return false;
                 }
+            }
+        }
+        return true;
+    }
+    public boolean checkMathSymbolAfterOpenedBracket(String stringToCheck) {
+        for (int i = 1; i < stringToCheck.length(); i++) {
+            if (stringToCheck.charAt(i-1) == '(' && stringToCheck.charAt(i) != '-' && !Character.isDigit(stringToCheck.charAt(i))) {
+                return false;
             }
         }
         return true;
