@@ -27,75 +27,75 @@ class CalculatorUnitTest {
     }
     @Test
     void inputDataEmpty() {
-        Calculator calculator = new Calculator();
+        Checking checking = new Checking();
         String input = "";
-        assertTrue(calculator.checkInputIsEmpty(input));
+        assertTrue(checking.checkInputIsEmpty(input));
     }
     @Test
     void inputDataNotEmpty() {
-        Calculator calculator = new Calculator();
+        Checking checking = new Checking();
         String input = "1";
-        assertFalse(calculator.checkInputIsEmpty(input));
+        assertFalse(checking.checkInputIsEmpty(input));
     }
     @Test
     void lastSymbolIncorrect() {
-        Calculator calculator = new Calculator();
+        Checking checking = new Checking();
         String input = "1+1+";
-        assertFalse(calculator.checkInputIsCorrect(input));
+        assertFalse(checking.checkInputIsCorrect(input));
     }
     @Test
     void incorrectBrackets() {
-        Calculator calculator = new Calculator();
+        Checking checking = new Checking();
         String input = "1+((1-1)";
-        assertFalse(calculator.checkInputHasCorrectBrackets(input));
+        assertFalse(checking.checkInputHasCorrectBrackets(input));
     }
     @Test
     void correctBrackets() {
-        Calculator calculator = new Calculator();
+        Checking checking = new Checking();
         String input = "(1+(1+1)+1)";
-        assertTrue(calculator.checkInputHasCorrectBrackets(input));
+        assertTrue(checking.checkInputHasCorrectBrackets(input));
     }
     @Test
     void validSymbols() {
-        Calculator calculator = new Calculator();
+        Checking checking = new Checking();
         String input = "150()/*-+.";
-        assertTrue(calculator.checkHasOnlyCorrectSymbols(input));
+        assertTrue(checking.checkHasOnlyCorrectSymbols(input));
     }
     @Test
     void invalidSymbols() {
-        Calculator calculator = new Calculator();
+        Checking checking = new Checking();
         String input = "qtp@%&";
-        assertFalse(calculator.checkHasOnlyCorrectSymbols(input));
+        assertFalse(checking.checkHasOnlyCorrectSymbols(input));
     }
     @Test
     void mathSymbolsSequence() {
-        Calculator calculator = new Calculator();
+        Checking checking = new Checking();
         String input = "1++1";
-        assertFalse(calculator.checkMathSymbolsSequence(input));
+        assertFalse(checking.checkMathSymbolsSequence(input));
     }
     @Test
     void correctFractionalNumbers() {
-        Calculator calculator = new Calculator();
+        Checking checking = new Checking();
         String input = "1.1+1.3";
-        assertTrue(calculator.checkFractionalNumbers(input));
+        assertTrue(checking.checkFractionalNumbers(input));
     }
     @Test
     void incorrectFractionalNumbers() {
-        Calculator calculator = new Calculator();
+        Checking checking = new Checking();
         String input = "1.1+1.3.3";
-        assertFalse(calculator.checkFractionalNumbers(input));
+        assertFalse(checking.checkFractionalNumbers(input));
     }
     @Test
     void mathSymbolBeforeClosingBracket() {
-        Calculator calculator = new Calculator();
+        Checking checking = new Checking();
         String input = "(1+1+)";
-        assertFalse(calculator.checkMathSymbolBeforeClosingBrackets(input));
+        assertFalse(checking.checkMathSymbolBeforeClosingBrackets(input));
     }
     @Test
     void substringInfinity() {
-        Calculator calculator = new Calculator();
+        Checking checking = new Checking();
         String input = "1+Infinity";
-        assertTrue(calculator.checkSubstringInfinity(input));
+        assertTrue(checking.checkSubstringInfinity(input));
     }
     @Test
     void inputDataBrackets() {
@@ -105,224 +105,224 @@ class CalculatorUnitTest {
     }
     @Test
     void moreThanSingleNumber() {
-        Calculator calculator = new Calculator();
+        Checking checking = new Checking();
         String input = "(-1+1)";
-        assertTrue(calculator.checkHasMoreThanSingleNumber(input));
+        assertTrue(checking.checkHasMoreThanSingleNumber(input));
     }
     @Test
     void openBracketsSinglePositiveNumber() {
-        Calculator calculator = new Calculator();
+        CountAndOpenBrackets countAndOpenBrackets = new CountAndOpenBrackets();
         String input = "1+(1)+1";
         String expectedResult = "1+1+1";
-        String actualResult = calculator.openBracketsWithPositiveNumber(input);
+        String actualResult = countAndOpenBrackets.openBracketsWithPositiveNumber(input);
         assertEquals(expectedResult, actualResult);
     }
     @Test
     void startClosedBracketsPosition() {
-        Calculator calculator = new Calculator();
+        Localizing localizing = new Localizing();
         String input = "1+(1+(1+2)+1)-2";
         int expectedResult = 5;
-        int actualResult = calculator.localizeStartPositionBrackets(input);
+        int actualResult = localizing.localizeStartPositionBrackets(input);
         assertEquals(expectedResult, actualResult);
     }
     @Test
     void endClosedBracketsPosition() {
-        Calculator calculator = new Calculator();
+        Localizing localizing = new Localizing();
         String input = "1+(1+(1+2)+1)-2";
         int expectedResult = 9;
-        int actualResult = calculator.localizeEndPositionBrackets(input);
+        int actualResult = localizing.localizeEndPositionBrackets(input);
         assertEquals(expectedResult, actualResult);
     }
     @Test
     void substringInClosedBrackets() {
-        Calculator calculator = new Calculator();
+        Localizing localizing = new Localizing();
         String input = "1+(1+(1+2)+1)-2";
         String expectedResult = "1+2";
-        String actualResult = calculator.localizeClosedBrackets(input);
+        String actualResult = localizing.localizeClosedBrackets(input);
         assertEquals(expectedResult, actualResult);
     }
     @Test
     void openBracketsAfterPlusSymbol() {
-        Calculator calculator = new Calculator();
+        CountAndOpenBrackets countAndOpenBrackets = new CountAndOpenBrackets();
         String input = "1+(1+(-2)+1)-2";
         String expectedResult = "1+(1-2+1)-2";
-        String actualResult = calculator.openBracketsWithSingleNegativeNumber(input);
+        String actualResult = countAndOpenBrackets.openBracketsWithSingleNegativeNumber(input);
         assertEquals(expectedResult, actualResult);
     }
     @Test
     void openBracketsAfterMinusSymbol() {
-        Calculator calculator = new Calculator();
+        CountAndOpenBrackets countAndOpenBrackets = new CountAndOpenBrackets();
         String input = "1+(1-(-2)+1)-2";
         String expectedResult = "1+(1+2+1)-2";
-        String actualResult = calculator.openBracketsWithSingleNegativeNumber(input);
+        String actualResult = countAndOpenBrackets.openBracketsWithSingleNegativeNumber(input);
         assertEquals(expectedResult, actualResult);
     }
     @Test
     void openBracketsAfterBracket() {
-        Calculator calculator = new Calculator();
+        CountAndOpenBrackets countAndOpenBrackets = new CountAndOpenBrackets();
         String input = "1+((-2)+1)-2";
         String expectedResult = "1+(-2+1)-2";
-        String actualResult = calculator.openBracketsWithSingleNegativeNumber(input);
+        String actualResult = countAndOpenBrackets.openBracketsWithSingleNegativeNumber(input);
         assertEquals(expectedResult, actualResult);
     }
     @Test
     void openBracketsAfterBracketAndMinus() {
-        Calculator calculator = new Calculator();
+        CountAndOpenBrackets countAndOpenBrackets = new CountAndOpenBrackets();
         String input = "1+(-(-2))-2";
         String expectedResult = "1+(2)-2";
-        String actualResult = calculator.openBracketsWithSingleNegativeNumber(input);
+        String actualResult = countAndOpenBrackets.openBracketsWithSingleNegativeNumber(input);
         assertEquals(expectedResult, actualResult);
     }
     @Test
     void openBracketsAfterMultiplyOrDivide() {
-        Calculator calculator = new Calculator();
+        CountAndOpenBrackets countAndOpenBrackets = new CountAndOpenBrackets();
         String input = "1+(1-2*(-2)+1)-2";
         String expectedResult = "1+(1-(-4.0)+1)-2";
-        String actualResult = calculator.openBracketsWithSingleNegativeNumber(input);
+        String actualResult = countAndOpenBrackets.openBracketsWithSingleNegativeNumber(input);
         assertEquals(expectedResult, actualResult);
     }
     @Test
     void openBracketsBeforeMultiplyOrDivide() {
-        Calculator calculator = new Calculator();
+        CountAndOpenBrackets countAndOpenBrackets = new CountAndOpenBrackets();
         String input = "1+(1+(-2)*2+1)-2";
         String expectedResult = "1+(1-2*2+1)-2";
-        String actualResult = calculator.openBracketsWithSingleNegativeNumber(input);
+        String actualResult = countAndOpenBrackets.openBracketsWithSingleNegativeNumber(input);
         assertEquals(expectedResult, actualResult);
     }
     @Test
     void moreThanTwoNumbers() {
-        Calculator calculator = new Calculator();
+        Checking checking = new Checking();
         String input = "1+2+3";
-        assertTrue(calculator.checkHasMoreThanTwoNumbers(input));
+        assertTrue(checking.checkHasMoreThanTwoNumbers(input));
     }
     @Test
     void twoOrLessNumbers() {
-        Calculator calculator = new Calculator();
+        Checking checking = new Checking();
         String input = "-2+3";
-        assertFalse(calculator.checkHasMoreThanTwoNumbers(input));
+        assertFalse(checking.checkHasMoreThanTwoNumbers(input));
     }
     @Test
     void startPositionToCount() {
-        Calculator calculator = new Calculator();
+        Localizing localizing = new Localizing();
         String input = "1+2*3+4";
         int expectedResult = 2;
-        int actualResult = calculator.localizeStartingPositionToCount(input);
+        int actualResult = localizing.localizeStartingPositionToCount(input);
         assertEquals(expectedResult, actualResult);
     }
     @Test
     void endPositionToCount() {
-        Calculator calculator = new Calculator();
+        Localizing localizing = new Localizing();
         String input = "1+2*3+4";
         int expectedResult = 5;
-        int actualResult = calculator.localizeEndingPositionToCount(input);
+        int actualResult = localizing.localizeEndingPositionToCount(input);
         assertEquals(expectedResult, actualResult);
     }
     @Test
     void substringToCount() {
-        Calculator calculator = new Calculator();
+        Localizing localizing = new Localizing();
         String input = "1+2*3+4";
         String expectedResult = "2*3";
-        String actualResult = calculator.localizeSubstringToCount(input);
+        String actualResult = localizing.localizeSubstringToCount(input);
         assertEquals(expectedResult, actualResult);
     }
     @Test
     void multiplyOrDivideSymbol() {
-        Calculator calculator = new Calculator();
+        Checking checking = new Checking();
         String input = "1+2*3+4";
-        assertTrue(calculator.checkMultiplyOrDivideSymbol(input));
+        assertTrue(checking.checkMultiplyOrDivideSymbol(input));
     }
     @Test
     void multiplyOrDivideSymbolPosition() {
-        Calculator calculator = new Calculator();
+        Localizing localizing = new Localizing();
         String input = "1+2*3+4";
         int expectedResult = 3;
-        int actualResult = calculator.localizeMultipleOrDivideSymbol(input);
+        int actualResult = localizing.localizeMultipleOrDivideSymbol(input);
         assertEquals(expectedResult, actualResult);
     }
     @Test
     void plusOrMinusSymbolPosition() {
-        Calculator calculator = new Calculator();
+        Localizing localizing = new Localizing();
         String input = "1+2*3+4";
         int expectedResult = 1;
-        int actualResult = calculator.localizePlusOrMinusSymbol(input);
+        int actualResult = localizing.localizePlusOrMinusSymbol(input);
         assertEquals(expectedResult, actualResult);
     }
     @Test
     void multiplySymbol() {
-        Calculator calculator = new Calculator();
+        Checking checking = new Checking();
         String input = "2*3";
-        assertTrue(calculator.checkHasMultiplySymbol(input));
+        assertTrue(checking.checkHasMultiplySymbol(input));
     }
     @Test
     void divideSymbol() {
-        Calculator calculator = new Calculator();
+        Checking checking = new Checking();
         String input = "2/3";
-        assertTrue(calculator.checkHasDivideSymbol(input));
+        assertTrue(checking.checkHasDivideSymbol(input));
     }
     @Test
     void minusSymbol() {
-        Calculator calculator = new Calculator();
+        Checking checking = new Checking();
         String input = "2-3";
-        assertTrue(calculator.checkHasMinusSymbol(input));
+        assertTrue(checking.checkHasMinusSymbol(input));
     }
     @Test
     void plusSymbol() {
-        Calculator calculator = new Calculator();
+        Checking checking = new Checking();
         String input = "3+4";
-        assertTrue(calculator.checkHasPlusSymbol(input));
+        assertTrue(checking.checkHasPlusSymbol(input));
     }
     @Test
     void multiplySubstring() {
-        Calculator calculator = new Calculator();
+        CountAndOpenBrackets countAndOpenBrackets = new CountAndOpenBrackets();
         String input = "-2*3";
         String expectedResult = "-6.0";
-        String actualResult = calculator.countSubstring(input);
+        String actualResult = countAndOpenBrackets.countSubstring(input);
         assertEquals(expectedResult, actualResult);
     }
     @Test
     void divideSubstring() {
-        Calculator calculator = new Calculator();
+        CountAndOpenBrackets countAndOpenBrackets = new CountAndOpenBrackets();
         String input = "6/3";
         String expectedResult = "2.0";
-        String actualResult = calculator.countSubstring(input);
+        String actualResult = countAndOpenBrackets.countSubstring(input);
         assertEquals(expectedResult, actualResult);
     }
     @Test
     void minusSubstring() {
-        Calculator calculator = new Calculator();
+        CountAndOpenBrackets countAndOpenBrackets = new CountAndOpenBrackets();
         String input = "2-3";
         String expectedResult = "-1.0";
-        String actualResult = calculator.countSubstring(input);
+        String actualResult = countAndOpenBrackets.countSubstring(input);
         assertEquals(expectedResult, actualResult);
     }
     @Test
     void plusSubstring() {
-        Calculator calculator = new Calculator();
+        CountAndOpenBrackets countAndOpenBrackets = new CountAndOpenBrackets();
         String input = "-6+-3";
         String expectedResult = "-9.0";
-        String actualResult = calculator.countSubstring(input);
+        String actualResult = countAndOpenBrackets.countSubstring(input);
         assertEquals(expectedResult, actualResult);
     }
     @Test
     void minusSingleNumberInBracketsLastInString() {
-        Calculator calculator = new Calculator();
+        CountAndOpenBrackets countAndOpenBrackets = new CountAndOpenBrackets();
         String input = "6-(-3)";
         String expectedResult = "6+3";
-        String actualResult = calculator.openBracketsWithSingleNegativeNumber(input);
+        String actualResult = countAndOpenBrackets.openBracketsWithSingleNegativeNumber(input);
         assertEquals(expectedResult, actualResult);
     }
     @Test
     void minusSingleNumberInBracketsFirstInString() {
-        Calculator calculator = new Calculator();
+        CountAndOpenBrackets countAndOpenBrackets = new CountAndOpenBrackets();
         String input = "(-3)+6";
         String expectedResult = "-3+6";
-        String actualResult = calculator.openBracketsWithSingleNegativeNumber(input);
+        String actualResult = countAndOpenBrackets.openBracketsWithSingleNegativeNumber(input);
         assertEquals(expectedResult, actualResult);
     }
     @Test
     void correctMathSymbolAfterOpenedBracket() {
-        Calculator calculator = new Calculator();
+        Checking checking = new Checking();
         String input = "1+(1)";
-        assertTrue(calculator.checkMathSymbolAfterOpenedBracket(input));
+        assertTrue(checking.checkMathSymbolAfterOpenedBracket(input));
     }
 }
