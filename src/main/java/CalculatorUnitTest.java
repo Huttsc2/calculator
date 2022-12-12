@@ -99,9 +99,9 @@ class CalculatorUnitTest {
     }
     @Test
     void inputDataBrackets() {
-        Calculator calculator = new Calculator();
+        Checking checking = new Checking();
         String input = "1+(1+1)";
-        assertTrue(calculator.checkHasBracket(input));
+        assertTrue(checking.checkHasBracket(input));
     }
     @Test
     void moreThanSingleNumber() {

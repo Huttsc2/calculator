@@ -31,12 +31,9 @@ public  class Calculator {
         return inputString;
     }
     public String countWhileHasBrackets(String stringToCount) {
-        String remainderAfterClosedBracket;
-        String substringInBrackets;
-        String countedSubstringInBrackets;
-        while (!checkSubstringInfinity(stringToCount) && checkHasBracket(stringToCount)) {
-            substringInBrackets = localizeClosedBrackets(stringToCount);
-            remainderAfterClosedBracket = stringToCount.substring(localizeEndPositionBrackets(stringToCount)+1);
+        Checking checking = new Checking();
+        while (!checkSubstringInfinity(stringToCount) && checking.checkHasBracket(stringToCount)) {
+            String substringInBrackets = localizeClosedBrackets(stringToCount);
             if (!checkHasMoreThanSingleNumber(substringInBrackets) && Double.parseDouble(substringInBrackets) >= 0) {
                 stringToCount = openBracketsWithPositiveNumber(stringToCount);
                 continue;
@@ -46,20 +43,32 @@ public  class Calculator {
                 continue;
             }
             if (!checkSubstringInfinity(stringToCount) && checkHasMoreThanTwoNumbers(substringInBrackets)) {
-                int substringLength = substringInBrackets.length()+1;
-                substringInBrackets = substringInBrackets.substring(0, localizeStartingPositionToCount(substringInBrackets)) +
-                        countSubstring(localizeSubstringToCount(substringInBrackets)) +
-                        substringInBrackets.substring(localizeEndingPositionToCount(substringInBrackets));
-                stringToCount = stringToCount.substring(0, stringToCount.length()-remainderAfterClosedBracket.length()-substringLength) +
-                        substringInBrackets + stringToCount.substring(stringToCount.length()-remainderAfterClosedBracket.length()-1);
+                stringToCount = countSubstringHasMoreThanTwoNumbers(stringToCount);
                 continue;
             }
             if (checkHasMoreThanSingleNumber(substringInBrackets)) {
-                countedSubstringInBrackets = countSubstring(substringInBrackets);
-                stringToCount = stringToCount.substring(0, stringToCount.length()-remainderAfterClosedBracket.length()-substringInBrackets.length()-1)
-                        + countedSubstringInBrackets + stringToCount.substring(stringToCount.length()-remainderAfterClosedBracket.length()-1);
+                stringToCount = countSubstringHasMoreThanSingleNumber(stringToCount);
             }
         }
+        return stringToCount;
+    }
+    public String countSubstringHasMoreThanTwoNumbers(String stringToCount) {
+        String substringInBrackets = localizeClosedBrackets(stringToCount);
+        String remainderAfterClosedBracket = stringToCount.substring(localizeEndPositionBrackets(stringToCount)+1);
+        int substringLength = substringInBrackets.length()+1;
+        substringInBrackets = substringInBrackets.substring(0, localizeStartingPositionToCount(substringInBrackets)) +
+                countSubstring(localizeSubstringToCount(substringInBrackets)) +
+                substringInBrackets.substring(localizeEndingPositionToCount(substringInBrackets));
+        stringToCount = stringToCount.substring(0, stringToCount.length()-remainderAfterClosedBracket.length()-substringLength) +
+                substringInBrackets + stringToCount.substring(stringToCount.length()-remainderAfterClosedBracket.length()-1);
+        return stringToCount;
+    }
+    public String countSubstringHasMoreThanSingleNumber(String stringToCount) {
+        String remainderAfterClosedBracket = stringToCount.substring(localizeEndPositionBrackets(stringToCount)+1);
+        String substringInBrackets = localizeClosedBrackets(stringToCount);;
+        String countedSubstringInBrackets = countSubstring(substringInBrackets);;
+        stringToCount = stringToCount.substring(0, stringToCount.length()-remainderAfterClosedBracket.length()-substringInBrackets.length()-1)
+                + countedSubstringInBrackets + stringToCount.substring(stringToCount.length()-remainderAfterClosedBracket.length()-1);
         return stringToCount;
     }
     public String countWithoutBrackets(String stringToCount) {
@@ -96,17 +105,17 @@ public  class Calculator {
         return stringToOpenBrackets;
     }
     public boolean checkPositiveNumbersInBrackets(String stringToCheck) {
-        boolean isItSingle = false;
+        boolean isItSinglePositiveNumber = false;
         for (int i = 0; i < stringToCheck.length(); i++) {
             if (stringToCheck.charAt(i) == '(')
-                isItSingle = true;
-            if (isItSingle && stringToCheck.charAt(i) == '+' || stringToCheck.charAt(i) == '-' ||
+                isItSinglePositiveNumber = true;
+            if (isItSinglePositiveNumber && stringToCheck.charAt(i) == '+' || stringToCheck.charAt(i) == '-' ||
                     stringToCheck.charAt(i) == '*' || stringToCheck.charAt(i) == '/')
-                isItSingle = false;
-            if (stringToCheck.charAt(i) == ')' && isItSingle)
+                isItSinglePositiveNumber = false;
+            if (stringToCheck.charAt(i) == ')' && isItSinglePositiveNumber)
                 break;
         }
-        return isItSingle;
+        return isItSinglePositiveNumber;
     }
     public String openBracketsWithSinglePositiveNumber(String stringToOpenBrackets) {
         int startPositionToOpenBrackets = 0, endPositionToOpenBrackets = 0;
@@ -146,14 +155,13 @@ public  class Calculator {
         } else if (stringToOpenBrackets.charAt(startPosition-1) == '-' && stringToOpenBrackets.charAt(startPosition-2) == '(') {
             stringToOpenBrackets = stringToOpenBrackets.substring(0,startPosition-1) +
                     stringToOpenBrackets.substring(startPosition+2, endPosition) + stringToOpenBrackets.substring(endPosition+1);
-        }else if (stringToOpenBrackets.charAt(startPosition-1) == '-') {
+        } else if (stringToOpenBrackets.charAt(startPosition-1) == '-') {
             stringToOpenBrackets = stringToOpenBrackets.substring(0,startPosition-1) + '+' +
                     stringToOpenBrackets.substring(startPosition+2, endPosition) + stringToOpenBrackets.substring(endPosition+1);
         } else if (stringToOpenBrackets.charAt(startPosition-1) == '(') {
             stringToOpenBrackets = stringToOpenBrackets.substring(0,startPosition) +
                     stringToOpenBrackets.substring(startPosition+1, endPosition) + stringToOpenBrackets.substring(endPosition+1);
-        }  else if (stringToOpenBrackets.charAt(startPosition-1) == '*' ||
-                stringToOpenBrackets.charAt(startPosition-1) == '/') {
+        } else if (stringToOpenBrackets.charAt(startPosition-1) == '*' || stringToOpenBrackets.charAt(startPosition-1) == '/') {
             stringToOpenBrackets = countSubstringWithMinusSingleNumberAfterDivideOrMultiply(stringToOpenBrackets);
         }
         return stringToOpenBrackets;
@@ -203,13 +211,13 @@ public  class Calculator {
         }
         return mathSymbolsCounter != 0;
     }
-    public boolean checkHasBracket(String stringToCheck) {
+    /*public boolean checkHasBracket(String stringToCheck) {
         for (int i = 0; i < stringToCheck.length(); i++) {
             if (stringToCheck.charAt(i) == '(')
                 return true;
         }
         return false;
-    }
+    }*/
     public int localizeStartPositionBrackets(String stringToLocalize) {
         int startBracketsPosition = 0;
         for (int i = 0; i < stringToLocalize.length(); i++) {
@@ -454,7 +462,8 @@ public  class Calculator {
     }
     public boolean checkMathSymbolAfterOpenedBracket(String stringToCheck) {
         for (int i = 1; i < stringToCheck.length(); i++) {
-            if (stringToCheck.charAt(i-1) == '(' && stringToCheck.charAt(i) != '-' && !Character.isDigit(stringToCheck.charAt(i))) {
+            if (stringToCheck.charAt(i-1) == '(' && stringToCheck.charAt(i) != '-' &&
+                    stringToCheck.charAt(i) != '(' && !Character.isDigit(stringToCheck.charAt(i))) {
                 return false;
             }
         }
