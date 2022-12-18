@@ -1,16 +1,17 @@
-public class Localizing {
+public class Localizing { //TODO: What do you mean? the "localization" word has other meaning in programming. Also, the "localizing" word means process but not an object
     public int localizeStartPositionBrackets(String stringToLocalize) {
         int startBracketsPosition = 0;
         for (int i = 0; i < stringToLocalize.length(); i++) {
+            //TODO: simplify the expression, you can use: stringToLocalize.indexOf('(');
             if (stringToLocalize.charAt(i) == '('){
                 startBracketsPosition = i;
             }
-            if (stringToLocalize.charAt(i) == ')')
+            if (stringToLocalize.charAt(i) == ')') //TODO: i don't understand the reason for this expression
                 break;
         }
         return startBracketsPosition;
     }
-    public int localizeEndPositionBrackets(String stringToLocalize) {
+    public int localizeEndPositionBrackets(String stringToLocalize) {//TODO: the same with previous
         int endBracketsPosition = 0;
         for (int i = 0; i < stringToLocalize.length(); i++) {
             if (stringToLocalize.charAt(i) == ')') {
@@ -23,11 +24,11 @@ public class Localizing {
     public String localizeClosedBrackets(String stringToLocalize) {
         int startBracketsPosition = localizeStartPositionBrackets(stringToLocalize);
         int endBracketsPosition = localizeEndPositionBrackets(stringToLocalize);
-        String substringInBrackets;
+        String substringInBrackets; //TODO: you can unite the declaration and the initialization
         substringInBrackets = stringToLocalize.substring(startBracketsPosition+1, endBracketsPosition);
         return substringInBrackets;
     }
-    public int localizePlusOrMinusSymbol(String stringToLocalize) {
+    public int localizePlusOrMinusSymbol(String stringToLocalize) {//TODO: it's ambitious
         int firstMinusSymbolCorrection = stringToLocalize.charAt(0) == '-' ? 1 : 0;
         int plusOrMinusPosition = 0;
         for (int i = firstMinusSymbolCorrection; i < stringToLocalize.length(); i++) {
@@ -38,7 +39,7 @@ public class Localizing {
         }
         return plusOrMinusPosition;
     }
-    public int localizeMultipleOrDivideSymbol(String stringToLocalize) {
+    public int localizeMultipleOrDivideSymbol(String stringToLocalize) {//TODO: the same with previous
         int multiplyOrDividePosition = 0;
         for (int i = 0; i < stringToLocalize.length(); i++) {
             if (stringToLocalize.charAt(i) == '*' || stringToLocalize.charAt(i) == '/') {
@@ -49,13 +50,15 @@ public class Localizing {
         return multiplyOrDividePosition;
     }
     public String localizeSubstringToCount(String stringToLocalize) {
-        String substringToCount;
+        String substringToCount; //TODO: unite
         substringToCount = stringToLocalize.substring(localizeStartingPositionToCount(stringToLocalize), localizeEndingPositionToCount(stringToLocalize));
         return substringToCount;
+
+        //TODO: return stringToLocalize.substring(localizeStartingPositionToCount(stringToLocalize), localizeEndingPositionToCount(stringToLocalize));
     }
     public int localizeStartingPositionToCount(String stringToLocalize) {
         Checking checking = new Checking();
-        int startPosition;
+        int startPosition; //TODO: simplify the expression
         if (checking.checkMultiplyOrDivideSymbol(stringToLocalize)) {
             startPosition = localizeMultipleOrDivideSymbol(stringToLocalize);
         } else {
@@ -75,7 +78,7 @@ public class Localizing {
     }
     public int localizeEndingPositionToCount(String stringToLocalize) {
         Checking checking = new Checking();
-        int endPosition;
+        int endPosition; //TODO: simplify
         if (checking.checkMultiplyOrDivideSymbol(stringToLocalize)) {
             endPosition = localizeMultipleOrDivideSymbol(stringToLocalize);
         } else {

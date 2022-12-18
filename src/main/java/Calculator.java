@@ -1,23 +1,26 @@
 import java.util.Scanner;
 
-public  class Calculator {
+public  class Calculator { //TODO: the name of this class and his idea are not the same
     public static void main(String[] args) {
         Calculator calculator = new Calculator();
+        /* TODO
+        * it has to be united. Look at chain invocation
+        */
         String stringToCount;
         stringToCount = calculator.addStringAndCheckIt();
-        stringToCount = calculator.countWhileHasBrackets(stringToCount);
-        stringToCount = calculator.countWithoutBrackets(stringToCount);
+        stringToCount = calculator.countWhileHasBrackets(stringToCount); //TODO: you said "count", but the result is string, what do you mean?
+        stringToCount = calculator.countWithoutBrackets(stringToCount); //TODO: the same
         System.out.println(stringToCount);
     }
-    public String addStringAndCheckIt() {
+    public String addStringAndCheckIt() { //TODO: this method can be separated into two parts
         Checking checking = new Checking();
         String inputString = null;
         boolean isCorrect = false;
         Scanner sc = new Scanner(System.in);
         System.out.println("Enter your example");
         System.out.println("You can use numbers and next symbols:");
-        System.out.println("'.' '/' '*' '-' '+' '(' ')'");
-        while (!isCorrect) {
+        System.out.println("'.' '/' '*' '-' '+' '(' ')'");  //TODO: you should unite these rows and replace it by single method
+        while (!isCorrect) { //TODO: simplify the method, you have got code-duplicate
             inputString = sc.nextLine().replaceAll(" ", "");
             isCorrect = checking.checkInputIsCorrect(inputString);
             if (!isCorrect) {
@@ -31,17 +34,17 @@ public  class Calculator {
             inputString = "Infinity";
         return inputString;
     }
-    public String countWhileHasBrackets(String stringToCount) {
+    public String countWhileHasBrackets(String stringToCount) {// TODO: the name is strange, also, we can live without additional information in the name
         Localizing localizing = new Localizing();
         CountAndOpenBrackets countAndOpenBrackets = new CountAndOpenBrackets();
         Checking checking = new Checking();
-        while (!checking.checkSubstringInfinity(stringToCount) && checking.checkHasBracket(stringToCount)) {
+        while (!checking.checkSubstringInfinity(stringToCount) && checking.checkHasBracket(stringToCount)) { //TODO: Simplify the expression.
             String substringInBrackets = localizing.localizeClosedBrackets(stringToCount);
             if (!checking.checkHasMoreThanSingleNumber(substringInBrackets) && Double.parseDouble(substringInBrackets) >= 0) {
                 stringToCount = countAndOpenBrackets.openBracketsWithPositiveNumber(stringToCount);
                 continue;
             }
-            if (!checking.checkHasMoreThanSingleNumber(substringInBrackets) && Double.parseDouble(substringInBrackets) < 0) {
+            if (!checking.checkHasMoreThanSingleNumber(substringInBrackets) && Double.parseDouble(substringInBrackets) < 0) { //TODO: you can use it without if
                 stringToCount = countAndOpenBrackets.openBracketsWithSingleNegativeNumber(stringToCount);
                 continue;
             }
@@ -55,12 +58,12 @@ public  class Calculator {
         }
         return stringToCount;
     }
-    public String countWithoutBrackets(String stringToCount) {
+    public String countWithoutBrackets(String stringToCount) { //TODO: the "count" word is not the same with the "calculate" word
         Localizing localizing = new Localizing();
         CountAndOpenBrackets countAndOpenBrackets = new CountAndOpenBrackets();
         Checking checking = new Checking();
         String substringInBrackets;
-        while (!checking.checkSubstringInfinity(stringToCount) && checking.checkHasMoreThanSingleNumber(stringToCount)) {
+        while (!checking.checkSubstringInfinity(stringToCount) && checking.checkHasMoreThanSingleNumber(stringToCount)) { //TODO: simplify the expression
             substringInBrackets = localizing.localizeSubstringToCount(stringToCount);
             String solvedSubstringInBrackets = countAndOpenBrackets.countSubstring(substringInBrackets);
             if (checking.checkHasMoreThanTwoNumbers(stringToCount))
@@ -74,9 +77,9 @@ public  class Calculator {
         }
         return stringToCount;
     }
-    public String addMultiplySymbolBeforeAndAfterBrackets(String stringToAdd) {
+    public String addMultiplySymbolBeforeAndAfterBrackets(String stringToAdd) { //TODO: the name is too big. We can live without additional information
         StringBuilder ns = new StringBuilder(stringToAdd);
-        for (int i = 1; i < stringToAdd.length(); i++) {
+        for (int i = 1; i < stringToAdd.length(); i++) { //TODO: you can use the symbols code to check it. Also, simplify the expression
             if (stringToAdd.charAt(i) == '(' && (Character.isDigit(stringToAdd.charAt(i-1)) || stringToAdd.charAt(i-1) == ')')) {
                 ns.insert(i, '*');
                 stringToAdd = ns.toString();
