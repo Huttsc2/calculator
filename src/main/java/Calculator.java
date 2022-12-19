@@ -1,15 +1,12 @@
 public class Calculator { //TODO: the name of this class and his idea are not the same
     public static void main(String[] args) {
-        //I need explanations about this method
         Calculator calculator = new Calculator();
         AddStringToCalculate addStringToCalculate = new AddStringToCalculate();
         /* TODO
         * it has to be united. Look at chain invocation
         */
-        String stringToCalculate;
-        stringToCalculate = addStringToCalculate.addStringAndCheckIt();
-        stringToCalculate = calculator.calculateWhileHasBrackets(stringToCalculate); //TODO: you said "count", but the result is string, what do you mean?
-        stringToCalculate = calculator.calculateWithoutBrackets(stringToCalculate); //TODO: the same
+        //TODO: you said "count", but the result is string, what do you mean?
+        String stringToCalculate = calculator.calculateWithoutBrackets(calculator.calculateWhileHasBrackets(addStringToCalculate.addStringAndCheckIt())); //TODO: the same
         System.out.println(stringToCalculate);
     }
     public String calculateWhileHasBrackets(String stringToCalculate) {// TODO: the name is strange, also, we can live without additional information in the name
