@@ -8,22 +8,22 @@ class CalculatorUnitTest {
 
     @Test
     void inputDataAddMultiply() {
-        Calculator calculator = new Calculator();
+        AddStringToCalculate addStringToCalculate = new AddStringToCalculate();
         String input = "1+(1+1(-1)3)+1";
         String expectedResult = "1+(1+1*(-1)*3)+1";
         InputStream in = new ByteArrayInputStream(input.getBytes());
         System.setIn(in);
-        String actualResult = calculator.addStringAndCheckIt();
+        String actualResult = addStringToCalculate.addStringAndCheckIt();
         assertEquals(expectedResult, actualResult);
     }
     @Test
     void inputDataDivisionByZero() {
-        Calculator calculator = new Calculator();
+        AddStringToCalculate addStringToCalculate = new AddStringToCalculate();
         String input = "1+(1+1/0(-1)*3)+1";
         String expectedResult = "Infinity";
         InputStream in = new ByteArrayInputStream(input.getBytes());
         System.setIn(in);
-        assertEquals(expectedResult, calculator.addStringAndCheckIt());
+        assertEquals(expectedResult, addStringToCalculate.addStringAndCheckIt());
     }
     @Test
     void inputDataEmpty() {
@@ -46,7 +46,7 @@ class CalculatorUnitTest {
     @Test
     void incorrectBrackets() {
         Checking checking = new Checking();
-        String input = "1+((1-1)";
+        String input = "1)2";
         assertFalse(checking.checkInputHasCorrectBrackets(input));
     }
     @Test
@@ -111,82 +111,82 @@ class CalculatorUnitTest {
     }
     @Test
     void openBracketsSinglePositiveNumber() {
-        CountAndOpenBrackets countAndOpenBrackets = new CountAndOpenBrackets();
+        CalculateAndOpenBrackets calculateAndOpenBrackets = new CalculateAndOpenBrackets();
         String input = "1+(1)+1";
         String expectedResult = "1+1+1";
-        String actualResult = countAndOpenBrackets.openBracketsWithPositiveNumber(input);
+        String actualResult = calculateAndOpenBrackets.openBracketsWithPositiveNumber(input);
         assertEquals(expectedResult, actualResult);
     }
     @Test
     void startClosedBracketsPosition() {
-        Localizing localizing = new Localizing();
+        PositionSearch positionSearch = new PositionSearch();
         String input = "1+(1+(1+2)+1)-2";
         int expectedResult = 5;
-        int actualResult = localizing.localizeStartPositionBrackets(input);
+        int actualResult = positionSearch.searchStartPositionClosedBrackets(input);
         assertEquals(expectedResult, actualResult);
     }
     @Test
     void endClosedBracketsPosition() {
-        Localizing localizing = new Localizing();
+        PositionSearch positionSearch = new PositionSearch();
         String input = "1+(1+(1+2)+1)-2";
         int expectedResult = 9;
-        int actualResult = localizing.localizeEndPositionBrackets(input);
+        int actualResult = positionSearch.searchEndPositionBrackets(input);
         assertEquals(expectedResult, actualResult);
     }
     @Test
     void substringInClosedBrackets() {
-        Localizing localizing = new Localizing();
+        PositionSearch positionSearch = new PositionSearch();
         String input = "1+(1+(1+2)+1)-2";
         String expectedResult = "1+2";
-        String actualResult = localizing.localizeClosedBrackets(input);
+        String actualResult = positionSearch.searchClosedBrackets(input);
         assertEquals(expectedResult, actualResult);
     }
     @Test
     void openBracketsAfterPlusSymbol() {
-        CountAndOpenBrackets countAndOpenBrackets = new CountAndOpenBrackets();
+        CalculateAndOpenBrackets calculateAndOpenBrackets = new CalculateAndOpenBrackets();
         String input = "1+(1+(-2)+1)-2";
         String expectedResult = "1+(1-2+1)-2";
-        String actualResult = countAndOpenBrackets.openBracketsWithSingleNegativeNumber(input);
+        String actualResult = calculateAndOpenBrackets.openBracketsWithSingleNegativeNumber(input);
         assertEquals(expectedResult, actualResult);
     }
     @Test
     void openBracketsAfterMinusSymbol() {
-        CountAndOpenBrackets countAndOpenBrackets = new CountAndOpenBrackets();
+        CalculateAndOpenBrackets calculateAndOpenBrackets = new CalculateAndOpenBrackets();
         String input = "1+(1-(-2)+1)-2";
         String expectedResult = "1+(1+2+1)-2";
-        String actualResult = countAndOpenBrackets.openBracketsWithSingleNegativeNumber(input);
+        String actualResult = calculateAndOpenBrackets.openBracketsWithSingleNegativeNumber(input);
         assertEquals(expectedResult, actualResult);
     }
     @Test
     void openBracketsAfterBracket() {
-        CountAndOpenBrackets countAndOpenBrackets = new CountAndOpenBrackets();
+        CalculateAndOpenBrackets calculateAndOpenBrackets = new CalculateAndOpenBrackets();
         String input = "1+((-2)+1)-2";
         String expectedResult = "1+(-2+1)-2";
-        String actualResult = countAndOpenBrackets.openBracketsWithSingleNegativeNumber(input);
+        String actualResult = calculateAndOpenBrackets.openBracketsWithSingleNegativeNumber(input);
         assertEquals(expectedResult, actualResult);
     }
     @Test
     void openBracketsAfterBracketAndMinus() {
-        CountAndOpenBrackets countAndOpenBrackets = new CountAndOpenBrackets();
+        CalculateAndOpenBrackets calculateAndOpenBrackets = new CalculateAndOpenBrackets();
         String input = "1+(-(-2))-2";
         String expectedResult = "1+(2)-2";
-        String actualResult = countAndOpenBrackets.openBracketsWithSingleNegativeNumber(input);
+        String actualResult = calculateAndOpenBrackets.openBracketsWithSingleNegativeNumber(input);
         assertEquals(expectedResult, actualResult);
     }
     @Test
     void openBracketsAfterMultiplyOrDivide() {
-        CountAndOpenBrackets countAndOpenBrackets = new CountAndOpenBrackets();
+        CalculateAndOpenBrackets calculateAndOpenBrackets = new CalculateAndOpenBrackets();
         String input = "1+(1-2*(-2)+1)-2";
         String expectedResult = "1+(1-(-4.0)+1)-2";
-        String actualResult = countAndOpenBrackets.openBracketsWithSingleNegativeNumber(input);
+        String actualResult = calculateAndOpenBrackets.openBracketsWithSingleNegativeNumber(input);
         assertEquals(expectedResult, actualResult);
     }
     @Test
     void openBracketsBeforeMultiplyOrDivide() {
-        CountAndOpenBrackets countAndOpenBrackets = new CountAndOpenBrackets();
+        CalculateAndOpenBrackets calculateAndOpenBrackets = new CalculateAndOpenBrackets();
         String input = "1+(1+(-2)*2+1)-2";
         String expectedResult = "1+(1-2*2+1)-2";
-        String actualResult = countAndOpenBrackets.openBracketsWithSingleNegativeNumber(input);
+        String actualResult = calculateAndOpenBrackets.openBracketsWithSingleNegativeNumber(input);
         assertEquals(expectedResult, actualResult);
     }
     @Test
@@ -202,27 +202,27 @@ class CalculatorUnitTest {
         assertFalse(checking.checkHasMoreThanTwoNumbers(input));
     }
     @Test
-    void startPositionToCount() {
-        Localizing localizing = new Localizing();
+    void startPositionToCalculate() {
+        PositionSearch positionSearch = new PositionSearch();
         String input = "1+2*3+4";
         int expectedResult = 2;
-        int actualResult = localizing.localizeStartingPositionToCount(input);
+        int actualResult = positionSearch.searchStartingPositionForCalculations(input);
         assertEquals(expectedResult, actualResult);
     }
     @Test
-    void endPositionToCount() {
-        Localizing localizing = new Localizing();
+    void endPositionToCalculate() {
+        PositionSearch positionSearch = new PositionSearch();
         String input = "1+2*3+4";
         int expectedResult = 5;
-        int actualResult = localizing.localizeEndingPositionToCount(input);
+        int actualResult = positionSearch.searchEndPositionForCalculations(input);
         assertEquals(expectedResult, actualResult);
     }
     @Test
-    void substringToCount() {
-        Localizing localizing = new Localizing();
+    void substringToCalculate() {
+        PositionSearch positionSearch = new PositionSearch();
         String input = "1+2*3+4";
         String expectedResult = "2*3";
-        String actualResult = localizing.localizeSubstringToCount(input);
+        String actualResult = positionSearch.searchSubstringForCalculations(input);
         assertEquals(expectedResult, actualResult);
     }
     @Test
@@ -233,18 +233,18 @@ class CalculatorUnitTest {
     }
     @Test
     void multiplyOrDivideSymbolPosition() {
-        Localizing localizing = new Localizing();
+        PositionSearch positionSearch = new PositionSearch();
         String input = "1+2*3+4";
         int expectedResult = 3;
-        int actualResult = localizing.localizeMultipleOrDivideSymbol(input);
+        int actualResult = positionSearch.searchMultipleOrDivideSymbol(input);
         assertEquals(expectedResult, actualResult);
     }
     @Test
     void plusOrMinusSymbolPosition() {
-        Localizing localizing = new Localizing();
+        PositionSearch positionSearch = new PositionSearch();
         String input = "1+2*3+4";
         int expectedResult = 1;
-        int actualResult = localizing.localizePlusOrMinusSymbol(input);
+        int actualResult = positionSearch.searchPlusOrMinusSymbol(input);
         assertEquals(expectedResult, actualResult);
     }
     @Test
@@ -273,50 +273,50 @@ class CalculatorUnitTest {
     }
     @Test
     void multiplySubstring() {
-        CountAndOpenBrackets countAndOpenBrackets = new CountAndOpenBrackets();
+        CalculateAndOpenBrackets calculateAndOpenBrackets = new CalculateAndOpenBrackets();
         String input = "-2*3";
         String expectedResult = "-6.0";
-        String actualResult = countAndOpenBrackets.countSubstring(input);
+        String actualResult = calculateAndOpenBrackets.calculatedSubstring(input);
         assertEquals(expectedResult, actualResult);
     }
     @Test
     void divideSubstring() {
-        CountAndOpenBrackets countAndOpenBrackets = new CountAndOpenBrackets();
+        CalculateAndOpenBrackets calculateAndOpenBrackets = new CalculateAndOpenBrackets();
         String input = "6/3";
         String expectedResult = "2.0";
-        String actualResult = countAndOpenBrackets.countSubstring(input);
+        String actualResult = calculateAndOpenBrackets.calculatedSubstring(input);
         assertEquals(expectedResult, actualResult);
     }
     @Test
     void minusSubstring() {
-        CountAndOpenBrackets countAndOpenBrackets = new CountAndOpenBrackets();
+        CalculateAndOpenBrackets calculateAndOpenBrackets = new CalculateAndOpenBrackets();
         String input = "2-3";
         String expectedResult = "-1.0";
-        String actualResult = countAndOpenBrackets.countSubstring(input);
+        String actualResult = calculateAndOpenBrackets.calculatedSubstring(input);
         assertEquals(expectedResult, actualResult);
     }
     @Test
     void plusSubstring() {
-        CountAndOpenBrackets countAndOpenBrackets = new CountAndOpenBrackets();
+        CalculateAndOpenBrackets calculateAndOpenBrackets = new CalculateAndOpenBrackets();
         String input = "-6+-3";
         String expectedResult = "-9.0";
-        String actualResult = countAndOpenBrackets.countSubstring(input);
+        String actualResult = calculateAndOpenBrackets.calculatedSubstring(input);
         assertEquals(expectedResult, actualResult);
     }
     @Test
     void minusSingleNumberInBracketsLastInString() {
-        CountAndOpenBrackets countAndOpenBrackets = new CountAndOpenBrackets();
+        CalculateAndOpenBrackets calculateAndOpenBrackets = new CalculateAndOpenBrackets();
         String input = "6-(-3)";
         String expectedResult = "6+3";
-        String actualResult = countAndOpenBrackets.openBracketsWithSingleNegativeNumber(input);
+        String actualResult = calculateAndOpenBrackets.openBracketsWithSingleNegativeNumber(input);
         assertEquals(expectedResult, actualResult);
     }
     @Test
     void minusSingleNumberInBracketsFirstInString() {
-        CountAndOpenBrackets countAndOpenBrackets = new CountAndOpenBrackets();
+        CalculateAndOpenBrackets calculateAndOpenBrackets = new CalculateAndOpenBrackets();
         String input = "(-3)+6";
         String expectedResult = "-3+6";
-        String actualResult = countAndOpenBrackets.openBracketsWithSingleNegativeNumber(input);
+        String actualResult = calculateAndOpenBrackets.openBracketsWithSingleNegativeNumber(input);
         assertEquals(expectedResult, actualResult);
     }
     @Test

@@ -1,24 +1,24 @@
-public class CountAndOpenBrackets {
-    public String countSubstringHasMoreThanTwoNumbers(String stringToCount) {
-        Localizing localizing = new Localizing();
-        String substringInBrackets = localizing.localizeClosedBrackets(stringToCount);
-        String remainderAfterClosedBracket = stringToCount.substring(localizing.localizeEndPositionBrackets(stringToCount)+1);
+public class CalculateAndOpenBrackets {
+    public String calculateSubstringHasMoreThanTwoNumbers(String stringToCalculate) {
+        PositionSearch positionSearch = new PositionSearch();
+        String substringInBrackets = positionSearch.searchClosedBrackets(stringToCalculate);
+        String remainderAfterClosedBracket = stringToCalculate.substring(positionSearch.searchEndPositionBrackets(stringToCalculate)+1);
         int substringLength = substringInBrackets.length()+1;
-        substringInBrackets = substringInBrackets.substring(0, localizing.localizeStartingPositionToCount(substringInBrackets)) +
-                countSubstring(localizing.localizeSubstringToCount(substringInBrackets)) +
-                substringInBrackets.substring(localizing.localizeEndingPositionToCount(substringInBrackets));
-        stringToCount = stringToCount.substring(0, stringToCount.length()-remainderAfterClosedBracket.length()-substringLength) +
-                substringInBrackets + stringToCount.substring(stringToCount.length()-remainderAfterClosedBracket.length()-1);
-        return stringToCount;
+        substringInBrackets = substringInBrackets.substring(0, positionSearch.searchStartingPositionForCalculations(substringInBrackets)) +
+                calculatedSubstring(positionSearch.searchSubstringForCalculations(substringInBrackets)) +
+                substringInBrackets.substring(positionSearch.searchEndPositionForCalculations(substringInBrackets));
+        stringToCalculate = stringToCalculate.substring(0, stringToCalculate.length()-remainderAfterClosedBracket.length()-substringLength) +
+                substringInBrackets + stringToCalculate.substring(stringToCalculate.length()-remainderAfterClosedBracket.length()-1);
+        return stringToCalculate;
     }
-    public String countSubstringHasMoreThanSingleNumber(String stringToCount) {
-        Localizing localizing = new Localizing();
-        String remainderAfterClosedBracket = stringToCount.substring(localizing.localizeEndPositionBrackets(stringToCount)+1);
-        String substringInBrackets = localizing.localizeClosedBrackets(stringToCount);
-        String countedSubstringInBrackets = countSubstring(substringInBrackets);
-        stringToCount = stringToCount.substring(0, stringToCount.length()-remainderAfterClosedBracket.length()-substringInBrackets.length()-1)
-                + countedSubstringInBrackets + stringToCount.substring(stringToCount.length()-remainderAfterClosedBracket.length()-1);
-        return stringToCount;
+    public String calculateSubstringHasMoreThanSingleNumber(String stringToCalculate) {
+        PositionSearch positionSearch = new PositionSearch();
+        String remainderAfterClosedBracket = stringToCalculate.substring(positionSearch.searchEndPositionBrackets(stringToCalculate)+1);
+        String substringInBrackets = positionSearch.searchClosedBrackets(stringToCalculate);
+        String calculatedSubstringInBrackets = calculatedSubstring(substringInBrackets);
+        stringToCalculate = stringToCalculate.substring(0, stringToCalculate.length()-remainderAfterClosedBracket.length()-substringInBrackets.length()-1)
+                + calculatedSubstringInBrackets + stringToCalculate.substring(stringToCalculate.length()-remainderAfterClosedBracket.length()-1);
+        return stringToCalculate;
     }
     public String openBracketsWithPositiveNumber(String stringToOpenBrackets) {
         Checking checking = new Checking();
@@ -55,9 +55,9 @@ public class CountAndOpenBrackets {
         return stringToOpenBrackets;
     }
     public String openBracketsWithSingleNegativeNumber(String stringToOpenBrackets) {
-        Localizing localizing = new Localizing();
-        int startPosition = localizing.localizeStartPositionBrackets(stringToOpenBrackets);
-        int endPosition = localizing.localizeEndPositionBrackets(stringToOpenBrackets);
+        PositionSearch positionSearch = new PositionSearch();
+        int startPosition = positionSearch.searchStartPositionClosedBrackets(stringToOpenBrackets);
+        int endPosition = positionSearch.searchEndPositionBrackets(stringToOpenBrackets);
         if (startPosition == 0) {
             stringToOpenBrackets = stringToOpenBrackets.substring(startPosition + 1, endPosition) + stringToOpenBrackets.substring(endPosition + 1);
         } else if (stringToOpenBrackets.charAt(startPosition-1) == '+') {
@@ -73,16 +73,16 @@ public class CountAndOpenBrackets {
             stringToOpenBrackets = stringToOpenBrackets.substring(0,startPosition) +
                     stringToOpenBrackets.substring(startPosition+1, endPosition) + stringToOpenBrackets.substring(endPosition+1);
         } else if (stringToOpenBrackets.charAt(startPosition-1) == '*' || stringToOpenBrackets.charAt(startPosition-1) == '/') {
-            stringToOpenBrackets = countSubstringWithMinusSingleNumberAfterDivideOrMultiply(stringToOpenBrackets);
+            stringToOpenBrackets = calculateSubstringWithMinusSingleNumberAfterDivideOrMultiply(stringToOpenBrackets);
         }
         return stringToOpenBrackets;
     }
-    public String countSubstringWithMinusSingleNumberAfterDivideOrMultiply(String stringToOpenBrackets) {
-        Localizing localizing = new Localizing();
+    public String calculateSubstringWithMinusSingleNumberAfterDivideOrMultiply(String stringToOpenBrackets) {
+        PositionSearch positionSearch = new PositionSearch();
         int startPositionIncludingBrackets = 0;
-        int startPosition = localizing.localizeStartPositionBrackets(stringToOpenBrackets);
-        int endPosition = localizing.localizeEndPositionBrackets(stringToOpenBrackets);
-        String substringToCount;
+        int startPosition = positionSearch.searchStartPositionClosedBrackets(stringToOpenBrackets);
+        int endPosition = positionSearch.searchEndPositionBrackets(stringToOpenBrackets);
+        String substringToCalculate;
         for (int i = startPosition-2; i > 0; i--) {
             if (stringToOpenBrackets.charAt(i) == '+' || stringToOpenBrackets.charAt(i) == '/' ||
                     stringToOpenBrackets.charAt(i) == '*' || stringToOpenBrackets.charAt(i) == '(') {
@@ -96,39 +96,39 @@ public class CountAndOpenBrackets {
                 break;
             }
         }
-        substringToCount = stringToOpenBrackets.substring(startPositionIncludingBrackets, endPosition).replaceAll("[)(]", "");
-        substringToCount = countSubstring(substringToCount);
+        substringToCalculate = stringToOpenBrackets.substring(startPositionIncludingBrackets, endPosition).replaceAll("[)(]", "");
+        substringToCalculate = calculatedSubstring(substringToCalculate);
         stringToOpenBrackets = stringToOpenBrackets.substring(0, startPositionIncludingBrackets) +
-                '(' + substringToCount + stringToOpenBrackets.substring(endPosition);
+                '(' + substringToCalculate + stringToOpenBrackets.substring(endPosition);
         return stringToOpenBrackets;
     }
-    public String countSubstring(String stringToCount) {
-        Localizing localizing = new Localizing();
+    public String calculatedSubstring(String stringToCalculate) {
+        PositionSearch positionSearch = new PositionSearch();
         Checking checking = new Checking();
         double firstNumber, secondNumber;
-        if (checking.checkMultiplyOrDivideSymbol(stringToCount)) {
-            firstNumber = Double.parseDouble(stringToCount.substring(0, localizing.localizeMultipleOrDivideSymbol(stringToCount)));
-            secondNumber = Double.parseDouble(stringToCount.substring(localizing.localizeMultipleOrDivideSymbol(stringToCount) + 1));
+        if (checking.checkMultiplyOrDivideSymbol(stringToCalculate)) {
+            firstNumber = Double.parseDouble(stringToCalculate.substring(0, positionSearch.searchMultipleOrDivideSymbol(stringToCalculate)));
+            secondNumber = Double.parseDouble(stringToCalculate.substring(positionSearch.searchMultipleOrDivideSymbol(stringToCalculate) + 1));
         } else {
-            firstNumber = Double.parseDouble(stringToCount.substring(0, localizing.localizePlusOrMinusSymbol(stringToCount)));
-            secondNumber = Double.parseDouble(stringToCount.substring(localizing.localizePlusOrMinusSymbol(stringToCount) + 1));
+            firstNumber = Double.parseDouble(stringToCalculate.substring(0, positionSearch.searchPlusOrMinusSymbol(stringToCalculate)));
+            secondNumber = Double.parseDouble(stringToCalculate.substring(positionSearch.searchPlusOrMinusSymbol(stringToCalculate) + 1));
         }
-        if (checking.checkHasMultiplySymbol(stringToCount)) {
+        if (checking.checkHasMultiplySymbol(stringToCalculate)) {
             firstNumber*=secondNumber;
-            stringToCount = Double.toString(firstNumber);
-            return stringToCount;
-        } else if (checking.checkHasDivideSymbol(stringToCount)) {
+            stringToCalculate = Double.toString(firstNumber);
+            return stringToCalculate;
+        } else if (checking.checkHasDivideSymbol(stringToCalculate)) {
             firstNumber/=secondNumber;
-            stringToCount = Double.toString(firstNumber);
-            return stringToCount;
-        } else if (checking.checkHasPlusSymbol(stringToCount)) {
+            stringToCalculate = Double.toString(firstNumber);
+            return stringToCalculate;
+        } else if (checking.checkHasPlusSymbol(stringToCalculate)) {
             firstNumber+=secondNumber;
-            stringToCount = Double.toString(firstNumber);
-            return stringToCount;
-        } else if (checking.checkHasMinusSymbol(stringToCount)) {
+            stringToCalculate = Double.toString(firstNumber);
+            return stringToCalculate;
+        } else if (checking.checkHasMinusSymbol(stringToCalculate)) {
             firstNumber-=secondNumber;
-            stringToCount = Double.toString(firstNumber);
+            stringToCalculate = Double.toString(firstNumber);
         }
-        return stringToCount;
+        return stringToCalculate;
     }
 }

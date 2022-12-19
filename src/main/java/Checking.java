@@ -51,13 +51,13 @@ public class Checking {
         return false;
     }
     public boolean checkMathSymbolInSubstringIsFirstMathSymbol(String stringToCheck) {
-        Localizing localizing = new Localizing();
+        PositionSearch positionSearch = new PositionSearch();
         int firstIsBracketsCorrection = stringToCheck.charAt(0) == '(' ? 1 : 0;
         int firstIsMinusSymbolCorrection = stringToCheck.charAt(firstIsBracketsCorrection) == '-' ? 1 : 0;
         if (checkMultiplyOrDivideSymbol(stringToCheck)) {
-            firstIsBracketsCorrection = localizing.localizeMultipleOrDivideSymbol(stringToCheck);
+            firstIsBracketsCorrection = positionSearch.searchMultipleOrDivideSymbol(stringToCheck);
         } else {
-            firstIsBracketsCorrection = localizing.localizePlusOrMinusSymbol(stringToCheck);
+            firstIsBracketsCorrection = positionSearch.searchPlusOrMinusSymbol(stringToCheck);
         }
         for (int i = firstIsMinusSymbolCorrection; i < firstIsBracketsCorrection; i++) {
             if (stringToCheck.charAt(i) == '/' || stringToCheck.charAt(i) == '*' ||
@@ -68,12 +68,12 @@ public class Checking {
         return true;
     }
     public boolean checkMathSymbolInSubstringIsLastMathSymbol(String stringToCheck) {
-        Localizing localizing = new Localizing();
+        PositionSearch positionSearch = new PositionSearch();
         int positionOfMathSymbol;
         if (checkMultiplyOrDivideSymbol(stringToCheck)) {
-            positionOfMathSymbol = localizing.localizeMultipleOrDivideSymbol(stringToCheck);
+            positionOfMathSymbol = positionSearch.searchMultipleOrDivideSymbol(stringToCheck);
         } else {
-            positionOfMathSymbol = localizing.localizePlusOrMinusSymbol(stringToCheck);
+            positionOfMathSymbol = positionSearch.searchPlusOrMinusSymbol(stringToCheck);
         }
         for (int i = positionOfMathSymbol+1; i < stringToCheck.length(); i++) {
             if (stringToCheck.charAt(i) == '/' || stringToCheck.charAt(i) == '*' ||
@@ -135,6 +135,8 @@ public class Checking {
                 bracketsCounter++;
             } else if (stringToCheck.charAt(i) == ')' && isFirstRightBracket) {
                 bracketsCounter--;
+            } else if (stringToCheck.charAt(i) == ')') {
+                return false;
             }
         }
         return bracketsCounter == 0;
