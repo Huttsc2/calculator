@@ -226,12 +226,6 @@ class CalculatorUnitTest {
         assertEquals(expectedResult, actualResult);
     }
     @Test
-    void multiplyOrDivideSymbol() {
-        Checking checking = new Checking();
-        String input = "1+2*3+4";
-        assertTrue(checking.checkMultiplyOrDivideSymbol(input));
-    }
-    @Test
     void multiplyOrDivideSymbolPosition() {
         PositionSearch positionSearch = new PositionSearch();
         String input = "1+2*3+4";

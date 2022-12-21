@@ -60,7 +60,7 @@ public class PositionSearch { //TODO: What do you mean? the "localization" word 
     public int searchStartingPositionForCalculations(String stringToSearch) {
         Checking checking = new Checking();
         int start; //TODO: simplify the expression
-        if (checking.checkMultiplyOrDivideSymbol(stringToSearch)) {
+        if (checking.checkHasMultiplySymbol(stringToSearch) || checking.checkHasDivideSymbol(stringToSearch)) {
             start = searchMultipleOrDivideSymbol(stringToSearch);
         } else {
             start = searchPlusOrMinusSymbol(stringToSearch);
@@ -81,7 +81,7 @@ public class PositionSearch { //TODO: What do you mean? the "localization" word 
     public int searchEndPositionForCalculations(String stringToSearch) {
         Checking checking = new Checking();
         int end; //TODO: simplify
-        if (checking.checkMultiplyOrDivideSymbol(stringToSearch)) {
+        if (checking.checkHasMultiplySymbol(stringToSearch) || checking.checkHasDivideSymbol(stringToSearch)) {
             end = searchMultipleOrDivideSymbol(stringToSearch);
         } else {
             end = searchPlusOrMinusSymbol(stringToSearch);

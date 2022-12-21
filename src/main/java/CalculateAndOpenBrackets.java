@@ -106,7 +106,7 @@ public class CalculateAndOpenBrackets {
         PositionSearch positionSearch = new PositionSearch();
         Checking checking = new Checking();
         double firstNumber, secondNumber;
-        if (checking.checkMultiplyOrDivideSymbol(stringToCalculate)) {
+        if (checking.checkHasDivideSymbol(stringToCalculate) || checking.checkHasMultiplySymbol(stringToCalculate)) {
             firstNumber = Double.parseDouble(stringToCalculate.substring(0, positionSearch.searchMultipleOrDivideSymbol(stringToCalculate)));
             secondNumber = Double.parseDouble(stringToCalculate.substring(positionSearch.searchMultipleOrDivideSymbol(stringToCalculate) + 1));
         } else {

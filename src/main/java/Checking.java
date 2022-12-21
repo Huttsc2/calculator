@@ -43,18 +43,11 @@ public class Checking {
         }
         return false;
     }
-    public boolean checkMultiplyOrDivideSymbol(String stringToCheck) {
-        for (int i = 0; i < stringToCheck.length(); i++) {
-            if (stringToCheck.charAt(i) == '*' || stringToCheck.charAt(i) == '/')
-                return true;
-        }
-        return false;
-    }
     public boolean checkMathSymbolInSubstringIsFirstMathSymbol(String stringToCheck) {
         PositionSearch positionSearch = new PositionSearch();
         int firstIsBracketsCorrection = stringToCheck.charAt(0) == '(' ? 1 : 0;
         int firstIsMinusSymbolCorrection = stringToCheck.charAt(firstIsBracketsCorrection) == '-' ? 1 : 0;
-        if (checkMultiplyOrDivideSymbol(stringToCheck)) {
+        if (checkHasMultiplySymbol(stringToCheck) || checkHasDivideSymbol(stringToCheck)) {
             firstIsBracketsCorrection = positionSearch.searchMultipleOrDivideSymbol(stringToCheck);
         } else {
             firstIsBracketsCorrection = positionSearch.searchPlusOrMinusSymbol(stringToCheck);
@@ -70,7 +63,7 @@ public class Checking {
     public boolean checkMathSymbolInSubstringIsLastMathSymbol(String stringToCheck) {
         PositionSearch positionSearch = new PositionSearch();
         int positionOfMathSymbol;
-        if (checkMultiplyOrDivideSymbol(stringToCheck)) {
+        if (checkHasMultiplySymbol(stringToCheck) || checkHasDivideSymbol(stringToCheck)) {
             positionOfMathSymbol = positionSearch.searchMultipleOrDivideSymbol(stringToCheck);
         } else {
             positionOfMathSymbol = positionSearch.searchPlusOrMinusSymbol(stringToCheck);
