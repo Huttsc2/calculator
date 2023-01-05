@@ -226,14 +226,6 @@ class CalculatorUnitTest {
         assertEquals(expectedResult, actualResult);
     }
     @Test
-    void multiplyOrDivideSymbolPosition() {
-        PositionSearch positionSearch = new PositionSearch();
-        String input = "1+2*3+4";
-        int expectedResult = 3;
-        int actualResult = positionSearch.searchMultipleOrDivideSymbol(input);
-        assertEquals(expectedResult, actualResult);
-    }
-    @Test
     void plusOrMinusSymbolPosition() {
         PositionSearch positionSearch = new PositionSearch();
         String input = "1+2*3+4";

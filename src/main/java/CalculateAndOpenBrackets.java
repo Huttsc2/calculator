@@ -106,13 +106,17 @@ public class CalculateAndOpenBrackets {
         PositionSearch positionSearch = new PositionSearch();
         Checking checking = new Checking();
         double firstNumber, secondNumber;
-        if (checking.checkHasDivideSymbol(stringToCalculate) || checking.checkHasMultiplySymbol(stringToCalculate)) {
-            firstNumber = Double.parseDouble(stringToCalculate.substring(0, positionSearch.searchMultipleOrDivideSymbol(stringToCalculate)));
-            secondNumber = Double.parseDouble(stringToCalculate.substring(positionSearch.searchMultipleOrDivideSymbol(stringToCalculate) + 1));
+        if (checking.checkHasDivideSymbol(stringToCalculate)) {
+            firstNumber = Double.parseDouble(stringToCalculate.substring(0, stringToCalculate.indexOf('/')));
+            secondNumber = Double.parseDouble(stringToCalculate.substring(stringToCalculate.indexOf('/')+1));
+        } else if (checking.checkHasMultiplySymbol(stringToCalculate)) {
+            firstNumber = Double.parseDouble(stringToCalculate.substring(0, stringToCalculate.indexOf('*')));
+            secondNumber = Double.parseDouble(stringToCalculate.substring(stringToCalculate.indexOf('*')+1));
         } else {
             firstNumber = Double.parseDouble(stringToCalculate.substring(0, positionSearch.searchPlusOrMinusSymbol(stringToCalculate)));
-            secondNumber = Double.parseDouble(stringToCalculate.substring(positionSearch.searchPlusOrMinusSymbol(stringToCalculate) + 1));
+            secondNumber = Double.parseDouble(stringToCalculate.substring(positionSearch.searchPlusOrMinusSymbol(stringToCalculate)+1));
         }
+        System.out.println(stringToCalculate);
         if (checking.checkHasMultiplySymbol(stringToCalculate)) {
             firstNumber*=secondNumber;
             stringToCalculate = Double.toString(firstNumber);

@@ -42,7 +42,7 @@ public class PositionSearch { //TODO: What do you mean? the "localization" word 
         }
         return plusOrMinusPosition;
     }
-    public int searchMultipleOrDivideSymbol(String stringToSearch) {//TODO: the same with previous
+    /*public int searchMultipleOrDivideSymbol(String stringToSearch) {//TODO: the same with previous
         int multiplyOrDividePosition = 0;
         for (int i = 0; i < stringToSearch.length(); i++) {
             if (stringToSearch.charAt(i) == '*' || stringToSearch.charAt(i) == '/') {
@@ -51,7 +51,7 @@ public class PositionSearch { //TODO: What do you mean? the "localization" word 
             }
         }
         return multiplyOrDividePosition;
-    }
+    }*/
     public String searchSubstringForCalculations(String stringToSearch) {
         //TODO: unite
         return stringToSearch.substring(searchStartingPositionForCalculations(stringToSearch), searchEndPositionForCalculations(stringToSearch));
@@ -60,8 +60,10 @@ public class PositionSearch { //TODO: What do you mean? the "localization" word 
     public int searchStartingPositionForCalculations(String stringToSearch) {
         Checking checking = new Checking();
         int start; //TODO: simplify the expression
-        if (checking.checkHasMultiplySymbol(stringToSearch) || checking.checkHasDivideSymbol(stringToSearch)) {
-            start = searchMultipleOrDivideSymbol(stringToSearch);
+        if (checking.checkHasMultiplySymbol(stringToSearch)) {
+            start = stringToSearch.indexOf('*');
+        } else if (checking.checkHasDivideSymbol(stringToSearch)){
+            start = stringToSearch.indexOf('/');
         } else {
             start = searchPlusOrMinusSymbol(stringToSearch);
         }
@@ -81,8 +83,10 @@ public class PositionSearch { //TODO: What do you mean? the "localization" word 
     public int searchEndPositionForCalculations(String stringToSearch) {
         Checking checking = new Checking();
         int end; //TODO: simplify
-        if (checking.checkHasMultiplySymbol(stringToSearch) || checking.checkHasDivideSymbol(stringToSearch)) {
-            end = searchMultipleOrDivideSymbol(stringToSearch);
+        if (checking.checkHasMultiplySymbol(stringToSearch)) {
+            end = stringToSearch.indexOf('*');
+        } else if (checking.checkHasDivideSymbol(stringToSearch)) {
+            end = stringToSearch.indexOf('/');
         } else {
             end = searchPlusOrMinusSymbol(stringToSearch);
         }
