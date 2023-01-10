@@ -6,11 +6,10 @@ public class Calculator { //TODO: the name of this class and his idea are not th
         * it has to be united. Look at chain invocation
         */
         //TODO: you said "count", but the result is string, what do you mean?
-        String stringToCalculate = calculator.calculateWithoutBrackets(calculator.calculateWhileHasBrackets(addStringToCalculate.addStringAndCheckIt())); //TODO: the same
+        String stringToCalculate = calculator.calculateWithoutBrackets(calculator.calculateWhileHasBrackets(addStringToCalculate.addString())); //TODO: the same
         System.out.println(stringToCalculate);
     }
     public String calculateWhileHasBrackets(String stringToCalculate) {// TODO: the name is strange, also, we can live without additional information in the name
-        //I need explanations about this method
         PositionSearch positionSearch = new PositionSearch();
         CalculateAndOpenBrackets calculateAndOpenBrackets = new CalculateAndOpenBrackets();
         Checking checking = new Checking();

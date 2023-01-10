@@ -103,20 +103,10 @@ public class CalculateAndOpenBrackets {
         return stringToOpenBrackets;
     }
     public String calculatedSubstring(String stringToCalculate) {
-        PositionSearch positionSearch = new PositionSearch();
         Checking checking = new Checking();
-        double firstNumber, secondNumber;
-        if (checking.checkHasDivideSymbol(stringToCalculate)) {
-            firstNumber = Double.parseDouble(stringToCalculate.substring(0, stringToCalculate.indexOf('/')));
-            secondNumber = Double.parseDouble(stringToCalculate.substring(stringToCalculate.indexOf('/')+1));
-        } else if (checking.checkHasMultiplySymbol(stringToCalculate)) {
-            firstNumber = Double.parseDouble(stringToCalculate.substring(0, stringToCalculate.indexOf('*')));
-            secondNumber = Double.parseDouble(stringToCalculate.substring(stringToCalculate.indexOf('*')+1));
-        } else {
-            firstNumber = Double.parseDouble(stringToCalculate.substring(0, positionSearch.searchPlusOrMinusSymbol(stringToCalculate)));
-            secondNumber = Double.parseDouble(stringToCalculate.substring(positionSearch.searchPlusOrMinusSymbol(stringToCalculate)+1));
-        }
-        System.out.println(stringToCalculate);
+        PositionSearch positionSearch = new PositionSearch();
+        double firstNumber = positionSearch.searchFirstNumber(stringToCalculate);
+        double secondNumber = positionSearch.searchSecondNumber(stringToCalculate);
         if (checking.checkHasMultiplySymbol(stringToCalculate)) {
             firstNumber*=secondNumber;
             stringToCalculate = Double.toString(firstNumber);

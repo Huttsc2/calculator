@@ -1,48 +1,35 @@
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 public class Checking {
     public boolean checkHasBracket(String stringToCheck) {
-        for (int i = 0; i < stringToCheck.length(); i++) {
-            if (stringToCheck.charAt(i) == '(')
-                return true;
-        }
-        return false;
-    }
-    public boolean checkFirstSymbolMinus(String stringToCheck) {
-        return stringToCheck.charAt(0) == '-';
+        return stringToCheck.contains("(");
     }
     public boolean checkHasMoreThanTwoNumbers(String stringToCheck) {
-        Checking checking = new Checking();
-        int firstSymbolIsMinusCorrection = checking.checkFirstSymbolMinus(stringToCheck) ? 1 : 0;
-        int mathSymbolsCounter = 0;
-        for (int i = firstSymbolIsMinusCorrection; i < stringToCheck.length(); i++) {
-            if (stringToCheck.charAt(i) == '/' || stringToCheck.charAt(i) == '*' || stringToCheck.charAt(i) == '+' || stringToCheck.charAt(i) == '-')
-                mathSymbolsCounter++;
+        Pattern pattern = Pattern.compile("\\d+\\.\\d+|\\d+");
+        Matcher matcher = pattern.matcher(stringToCheck);
+        int numberCounter = 0;
+        while (matcher.find()) {
+            numberCounter++;
         }
-        return mathSymbolsCounter > 1;
+        return numberCounter>2;
     }
     public boolean checkSinglePositiveNumbersInBrackets(String stringToCheck) {
-        boolean isItSinglePositiveNumber = false;
-        for (int i = 0; i < stringToCheck.length(); i++) {
-            if (stringToCheck.charAt(i) == '(')
-                isItSinglePositiveNumber = true;
-            if (isItSinglePositiveNumber && stringToCheck.charAt(i) == '+' || stringToCheck.charAt(i) == '-' ||
-                    stringToCheck.charAt(i) == '*' || stringToCheck.charAt(i) == '/')
-                isItSinglePositiveNumber = false;
-            if (stringToCheck.charAt(i) == ')' && isItSinglePositiveNumber)
-                break;
-        }
-        return isItSinglePositiveNumber;
+        Pattern pattern = Pattern.compile("\\(\\d+\\.\\d+\\)|\\(\\d+\\)");
+        Matcher matcher = pattern.matcher(stringToCheck);
+        return matcher.find();
     }
     public boolean checkHasMoreThanSingleNumber(String stringToCheck) {
-        int firstIsABracketCorrection = stringToCheck.charAt(0) == '(' ? 1 : 0;
-        int firstIsAMinusCorrection =
-                stringToCheck.charAt(firstIsABracketCorrection) == '-' ? 1 + firstIsABracketCorrection : firstIsABracketCorrection;
-        for (int i = firstIsAMinusCorrection; i < stringToCheck.length(); i++) {
-            if (stringToCheck.charAt(i) == '/' || stringToCheck.charAt(i) == '*' ||
-                    stringToCheck.charAt(i) == '+' || stringToCheck.charAt(i) == '-')
-                return true;
+        Pattern pattern = Pattern.compile("\\d+\\.\\d+|\\d+");
+        Matcher matcher = pattern.matcher(stringToCheck);
+        int numberCounter = 0;
+        while (matcher.find()) {
+            numberCounter++;
         }
-        return false;
+        return numberCounter>1;
     }
+
+    //return here later
     public boolean checkMathSymbolInSubstringIsFirstMathSymbol(String stringToCheck) {
         PositionSearch positionSearch = new PositionSearch();
         int firstIsBracketsCorrection = stringToCheck.charAt(0) == '(' ? 1 : 0;
@@ -62,6 +49,8 @@ public class Checking {
         }
         return true;
     }
+
+    //return here later
     public boolean checkMathSymbolInSubstringIsLastMathSymbol(String stringToCheck) {
         PositionSearch positionSearch = new PositionSearch();
         int positionOfMathSymbol;
@@ -81,47 +70,26 @@ public class Checking {
         return true;
     }
     public boolean checkHasMultiplySymbol(String stringToCheck) {
-        for (int i = 0; i < stringToCheck.length(); i++) {
-            if (stringToCheck.charAt(i) == '*')
-                return true;
-        }
-        return false;
+        return stringToCheck.contains("*");
     }
     public boolean checkHasDivideSymbol(String stringToCheck) {
-        for (int i = 0; i < stringToCheck.length(); i++) {
-            if (stringToCheck.charAt(i) == '/')
-                return true;
-        }
-        return false;
+        return stringToCheck.contains("/");
     }
     public boolean checkHasPlusSymbol(String stringToCheck) {
-        for (int i = 0; i < stringToCheck.length(); i++) {
-            if (stringToCheck.charAt(i) == '+')
-                return true;
-        }
-        return false;
+        return stringToCheck.contains("+");
     }
     public boolean checkHasMinusSymbol(String stringToCheck) {
-        int x = stringToCheck.charAt(0) == '-' ? 1 : 0;
-        for (int i = x; i < stringToCheck.length(); i++) {
-            if (stringToCheck.charAt(i) == '-')
-                return true;
-        }
-        return false;
+        if (stringToCheck.charAt(0) == '-')
+            stringToCheck = stringToCheck.substring(1);
+        return stringToCheck.contains("-");
     }
     public boolean checkInputIsEmpty(String stringToCheck) {
         return stringToCheck.length() == 0;
     }
     public boolean checkHasDivisionByZero(String stringToCheck) {
-        for (int i = 1; i < stringToCheck.length()-1; i++) {
-            if (stringToCheck.charAt(i) == '/' && stringToCheck.charAt(i+1) == '0') {
-                if (stringToCheck.length() == i+2)
-                    return true;
-                if (stringToCheck.charAt(i+2) != '.')
-                    return true;
-            }
-        }
-        return false;
+        Pattern pattern = Pattern.compile("/0[^\\d.]|/0$");
+        Matcher matcher = pattern.matcher(stringToCheck);
+        return matcher.find();
     }
     public boolean checkInputHasCorrectBrackets(String stringToCheck) {
         int bracketsCounter = 0;
@@ -139,42 +107,26 @@ public class Checking {
         return bracketsCounter == 0;
     }
     public boolean checkMathSymbolBeforeClosingBrackets(String stringToCheck) {
-        for (int i = 0; i < stringToCheck.length(); i++) {
-            if (stringToCheck.charAt(i) == ')' && (stringToCheck.charAt(i-1) == '-' ||
-                    stringToCheck.charAt(i-1) == '+' || stringToCheck.charAt(i-1) == '*' ||
-                    stringToCheck.charAt(i-1) == '/' || stringToCheck.charAt(i-1) == '.' || stringToCheck.charAt(i-1) == '('))
-                return false;
-        }
-        return true;
+        Pattern pattern = Pattern.compile("[^)+-/*\\d]\\)");
+        Matcher matcher = pattern.matcher(stringToCheck);
+        return matcher.find();
     }
-    public boolean checkHasOnlyCorrectSymbols(String stringToCheck) {
-        for (int i = 0; i < stringToCheck.length(); i++) {
-            if (!Character.isDigit(stringToCheck.charAt(i)) && stringToCheck.charAt(i) != '-' && stringToCheck.charAt(i) != '+' && stringToCheck.charAt(i) != '/'
-                    && stringToCheck.charAt(i) != '*' && stringToCheck.charAt(i) != '(' && stringToCheck.charAt(i) != ')' && stringToCheck.charAt(i) != '.')
-                return false;
-        }
-        return true;
+    public boolean checkHasIncorrectSymbols(String stringToCheck) {
+        Pattern pattern = Pattern.compile("[^\\d+\\-*/.()]");
+        Matcher matcher = pattern.matcher(stringToCheck);
+        return matcher.find();
     }
     public boolean checkMathSymbolsSequence(String stringToCheck) {
-        for (int i = 1; i < stringToCheck.length(); i++) {
-            if (stringToCheck.charAt(i-1) == '-' || stringToCheck.charAt(i-1) == '+' || stringToCheck.charAt(i-1) == '/' || stringToCheck.charAt(i-1) == '*') {
-                if (stringToCheck.charAt(i) == '-' || stringToCheck.charAt(i) == '+' || stringToCheck.charAt(i) == '/' || stringToCheck.charAt(i) == '*') {
-                    return false;
-                }
-            }
-        }
-        return true;
+        Pattern pattern = Pattern.compile("[-+/*][-+/*]");
+        Matcher matcher = pattern.matcher(stringToCheck);
+        return matcher.find();
     }
     public boolean checkMathSymbolAfterOpenedBracket(String stringToCheck) {
-        for (int i = 1; i < stringToCheck.length(); i++) {
-            if (stringToCheck.charAt(i-1) == '(' && stringToCheck.charAt(i) != '-' &&
-                    stringToCheck.charAt(i) != '(' && !Character.isDigit(stringToCheck.charAt(i))) {
-                return false;
-            }
-        }
-        return true;
+        Pattern pattern = Pattern.compile("\\([^\\d-(]");
+        Matcher matcher = pattern.matcher(stringToCheck);
+        return matcher.find();
     }
-    public boolean checkFractionalNumbers(String stringToCheck) {
+    public boolean oldCheckFractionalNumbers(String stringToCheck) {
         stringToCheck = stringToCheck.replaceAll("[-+*()/]", " ").replaceAll("\\s{2,}", " ");
         String[] numbersInString = stringToCheck.split(" ");
         int dotsCounter = 0;
@@ -199,12 +151,13 @@ public class Checking {
     public boolean checkInputIsCorrect(String stringToCheck) {
         if (checkInputIsEmpty(stringToCheck))
             return false;
+        Pattern pattern = Pattern.compile("[^\\d)]$");
+        Matcher matcher = pattern.matcher(stringToCheck);
+        if (matcher.find())
+            return false;
         return  (Character.isDigit(stringToCheck.charAt(0)) || stringToCheck.charAt(0) == '-' || stringToCheck.charAt(0) == '(') &&
-                checkInputHasCorrectBrackets(stringToCheck) && checkHasOnlyCorrectSymbols(stringToCheck) &&
-                checkMathSymbolsSequence(stringToCheck) && checkFractionalNumbers(stringToCheck) &&
-                checkMathSymbolBeforeClosingBrackets(stringToCheck) && checkMathSymbolAfterOpenedBracket(stringToCheck) &&
-                (stringToCheck.charAt(stringToCheck.length()-1) != '-' && stringToCheck.charAt(stringToCheck.length()-1) != '+' &&
-                        stringToCheck.charAt(stringToCheck.length()-1) != '/' && stringToCheck.charAt(stringToCheck.length()-1) != '*' &&
-                        stringToCheck.charAt(stringToCheck.length()-1) != '(' && stringToCheck.charAt(stringToCheck.length()-1) != '.');
+                checkInputHasCorrectBrackets(stringToCheck) && !checkHasIncorrectSymbols(stringToCheck) &&
+                !checkMathSymbolsSequence(stringToCheck) && oldCheckFractionalNumbers(stringToCheck) &&
+                !checkMathSymbolBeforeClosingBrackets(stringToCheck) && !checkMathSymbolAfterOpenedBracket(stringToCheck);
     }
 }

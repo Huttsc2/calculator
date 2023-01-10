@@ -1,28 +1,22 @@
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 public class PositionSearch { //TODO: What do you mean? the "localization" word has other meaning in programming. Also, the "localizing" word means process but not an object
     public int searchStartPositionClosedBrackets(String stringToSearch) {
         int startBracketsPosition = 0;
         for (int i = 0; i < stringToSearch.length(); i++) {
             //TODO: simplify the expression, you can use: stringToLocalize.indexOf('(');
-            //i can`t, because i need to find the start position of the closed brackets, but not the first bracket
             if (stringToSearch.charAt(i) == '('){
                 startBracketsPosition = i;
             }
             if (stringToSearch.charAt(i) == ')')
                 break;
             //TODO: i don't understand the reason for this expression
-            //this is necessary to determine that the brackets are closed
         }
         return startBracketsPosition;
     }
     public int searchEndPositionBrackets(String stringToSearch) {//TODO: the same with previous
-        int endBracketsPosition = 0;
-        for (int i = 0; i < stringToSearch.length(); i++) {
-            if (stringToSearch.charAt(i) == ')') {
-                endBracketsPosition = i;
-                break;
-            }
-        }
-        return endBracketsPosition;
+        return stringToSearch.indexOf(')');
     }
     public String searchClosedBrackets(String stringToSearch) {
         int startBracketsPosition = searchStartPositionClosedBrackets(stringToSearch);
@@ -31,7 +25,6 @@ public class PositionSearch { //TODO: What do you mean? the "localization" word 
         return stringToSearch.substring(startBracketsPosition+1, endBracketsPosition);
     }
     public int searchPlusOrMinusSymbol(String stringToSearch) {//TODO: it's ambitious
-        //I don`t understand what you mean
         int firstMinusSymbolCorrection = stringToSearch.charAt(0) == '-' ? 1 : 0;
         int plusOrMinusPosition = 0;
         for (int i = firstMinusSymbolCorrection; i < stringToSearch.length(); i++) {
@@ -42,16 +35,6 @@ public class PositionSearch { //TODO: What do you mean? the "localization" word 
         }
         return plusOrMinusPosition;
     }
-    /*public int searchMultipleOrDivideSymbol(String stringToSearch) {//TODO: the same with previous
-        int multiplyOrDividePosition = 0;
-        for (int i = 0; i < stringToSearch.length(); i++) {
-            if (stringToSearch.charAt(i) == '*' || stringToSearch.charAt(i) == '/') {
-                multiplyOrDividePosition = i;
-                break;
-            }
-        }
-        return multiplyOrDividePosition;
-    }*/
     public String searchSubstringForCalculations(String stringToSearch) {
         //TODO: unite
         return stringToSearch.substring(searchStartingPositionForCalculations(stringToSearch), searchEndPositionForCalculations(stringToSearch));
@@ -100,5 +83,25 @@ public class PositionSearch { //TODO: What do you mean? the "localization" word 
                 break;
         }
         return end;
+    }
+    public double searchFirstNumber(String stringToSearch) {
+        double firstNumber = 0;
+        String pattern = "(^-?\\d+\\.\\d+|^-?\\d+)";
+        Pattern r = Pattern.compile(pattern);
+        Matcher m = r.matcher(stringToSearch);
+        if (m.find()) {
+            firstNumber = Double.parseDouble(m.group());
+        }
+        return firstNumber;
+    }
+    public double searchSecondNumber(String stringToSearch) {
+        double secondNumber = 0;
+        String pattern = "((?<=[/+*])-\\d+\\.\\d+|(?<=[/+*])-\\d+|\\d+\\.\\d+$|\\d+$)";
+        Pattern r = Pattern.compile(pattern);
+        Matcher m = r.matcher(stringToSearch);
+        if (m.find()) {
+            secondNumber = Double.parseDouble(m.group());
+        }
+        return secondNumber;
     }
 }

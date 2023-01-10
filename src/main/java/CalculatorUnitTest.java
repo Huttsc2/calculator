@@ -13,7 +13,7 @@ class CalculatorUnitTest {
         String expectedResult = "1+(1+1*(-1)*3)+1";
         InputStream in = new ByteArrayInputStream(input.getBytes());
         System.setIn(in);
-        String actualResult = addStringToCalculate.addStringAndCheckIt();
+        String actualResult = addStringToCalculate.addString();
         assertEquals(expectedResult, actualResult);
     }
     @Test
@@ -23,7 +23,7 @@ class CalculatorUnitTest {
         String expectedResult = "Infinity";
         InputStream in = new ByteArrayInputStream(input.getBytes());
         System.setIn(in);
-        assertEquals(expectedResult, addStringToCalculate.addStringAndCheckIt());
+        assertEquals(expectedResult, addStringToCalculate.addString());
     }
     @Test
     void inputDataEmpty() {
@@ -59,31 +59,31 @@ class CalculatorUnitTest {
     void validSymbols() {
         Checking checking = new Checking();
         String input = "150()/*-+.";
-        assertTrue(checking.checkHasOnlyCorrectSymbols(input));
+        assertFalse(checking.checkHasIncorrectSymbols(input));
     }
     @Test
     void invalidSymbols() {
         Checking checking = new Checking();
         String input = "qtp@%&";
-        assertFalse(checking.checkHasOnlyCorrectSymbols(input));
+        assertTrue(checking.checkHasIncorrectSymbols(input));
     }
     @Test
     void mathSymbolsSequence() {
         Checking checking = new Checking();
         String input = "1++1";
-        assertFalse(checking.checkMathSymbolsSequence(input));
+        assertTrue(checking.checkMathSymbolsSequence(input));
     }
     @Test
     void correctFractionalNumbers() {
         Checking checking = new Checking();
         String input = "1.1+1.3";
-        assertTrue(checking.checkFractionalNumbers(input));
+        assertTrue(checking.oldCheckFractionalNumbers(input));
     }
     @Test
     void incorrectFractionalNumbers() {
         Checking checking = new Checking();
         String input = "1.1+1.3.3";
-        assertFalse(checking.checkFractionalNumbers(input));
+        assertFalse(checking.oldCheckFractionalNumbers(input));
     }
     @Test
     void mathSymbolBeforeClosingBracket() {
@@ -173,6 +173,7 @@ class CalculatorUnitTest {
         String actualResult = calculateAndOpenBrackets.openBracketsWithSingleNegativeNumber(input);
         assertEquals(expectedResult, actualResult);
     }
+
     @Test
     void openBracketsAfterMultiplyOrDivide() {
         CalculateAndOpenBrackets calculateAndOpenBrackets = new CalculateAndOpenBrackets();
@@ -260,8 +261,8 @@ class CalculatorUnitTest {
     @Test
     void multiplySubstring() {
         CalculateAndOpenBrackets calculateAndOpenBrackets = new CalculateAndOpenBrackets();
-        String input = "-2*3";
-        String expectedResult = "-6.0";
+        String input = "-2*-3";
+        String expectedResult = "6.0";
         String actualResult = calculateAndOpenBrackets.calculatedSubstring(input);
         assertEquals(expectedResult, actualResult);
     }
@@ -308,7 +309,7 @@ class CalculatorUnitTest {
     @Test
     void correctMathSymbolAfterOpenedBracket() {
         Checking checking = new Checking();
-        String input = "1+(1)";
-        assertTrue(checking.checkMathSymbolAfterOpenedBracket(input));
+        String input = "1+(-1)";
+        assertFalse(checking.checkMathSymbolAfterOpenedBracket(input));
     }
 }

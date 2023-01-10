@@ -1,8 +1,7 @@
 import java.util.Scanner;
 
 public class AddStringToCalculate {
-    public String addStringAndCheckIt() { //TODO: this method can be separated into two parts
-        //I don`t understand witch two parts i need to separate
+    public String addString() { //TODO: this method can be separated into two parts
         Checking checking = new Checking();
         String inputString = null;
         boolean isCorrect = false;
@@ -28,7 +27,6 @@ public class AddStringToCalculate {
     public String addMultiplySymbol(String stringToAdd) { //TODO: the name is too big. We can live without additional information
         StringBuilder ns = new StringBuilder(stringToAdd);
         for (int i = 1; i < stringToAdd.length(); i++) { //TODO: you can use the symbols code to check it. Also, simplify the expression
-            //i need an explanation
             if (stringToAdd.charAt(i) == '(' && (Character.isDigit(stringToAdd.charAt(i-1)) || stringToAdd.charAt(i-1) == ')')) {
                 ns.insert(i, '*');
                 stringToAdd = ns.toString();
