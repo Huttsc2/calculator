@@ -231,7 +231,7 @@ class CalculatorUnitTest {
         PositionSearch positionSearch = new PositionSearch();
         String input = "1+2*3+4";
         int expectedResult = 1;
-        int actualResult = positionSearch.searchPlusOrMinusSymbol(input);
+        int actualResult = positionSearch.searchPlusSymbolPosition(input);
         assertEquals(expectedResult, actualResult);
     }
     @Test

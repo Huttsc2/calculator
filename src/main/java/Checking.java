@@ -39,7 +39,7 @@ public class Checking {
         } else if (checkHasDivideSymbol(stringToCheck)) {
             firstIsBracketsCorrection = stringToCheck.indexOf('/');
         } else {
-            firstIsBracketsCorrection = positionSearch.searchPlusOrMinusSymbol(stringToCheck);
+            firstIsBracketsCorrection = positionSearch.searchPlusSymbolPosition(stringToCheck);
         }
         for (int i = firstIsMinusSymbolCorrection; i < firstIsBracketsCorrection; i++) {
             if (stringToCheck.charAt(i) == '/' || stringToCheck.charAt(i) == '*' ||
@@ -59,7 +59,7 @@ public class Checking {
         } else if (checkHasDivideSymbol(stringToCheck)) {
             positionOfMathSymbol = stringToCheck.indexOf('/');
         } else {
-            positionOfMathSymbol = positionSearch.searchPlusOrMinusSymbol(stringToCheck);
+            positionOfMathSymbol = positionSearch.searchPlusSymbolPosition(stringToCheck);
         }
         for (int i = positionOfMathSymbol+1; i < stringToCheck.length(); i++) {
             if (stringToCheck.charAt(i) == '/' || stringToCheck.charAt(i) == '*' ||

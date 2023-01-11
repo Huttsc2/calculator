@@ -24,16 +24,37 @@ public class PositionSearch { //TODO: What do you mean? the "localization" word 
         //TODO: you can unite the declaration and the initialization
         return stringToSearch.substring(startBracketsPosition+1, endBracketsPosition);
     }
-    public int searchPlusOrMinusSymbol(String stringToSearch) {//TODO: it's ambitious
-        int firstMinusSymbolCorrection = stringToSearch.charAt(0) == '-' ? 1 : 0;
-        int plusOrMinusPosition = 0;
-        for (int i = firstMinusSymbolCorrection; i < stringToSearch.length(); i++) {
-            if (stringToSearch.charAt(i) == '+' || stringToSearch.charAt(i) == '-') {
-                plusOrMinusPosition = i;
-                break;
-            }
+    public int searchMultiplySymbolPosition(String stringToSearch) {
+        int symbolPosition = 0;
+        String regex = "[*]";
+        Pattern pattern = Pattern.compile(regex);
+        Matcher matcher = pattern.matcher(stringToSearch);
+        if (matcher.find()) {
+            symbolPosition = matcher.start();
         }
-        return plusOrMinusPosition;
+        return symbolPosition;
+    }
+    public int searchDivideSymbolPosition(String stringToSearch) {
+        int symbolPosition = 0;
+        String regex = "/";
+        Pattern pattern = Pattern.compile(regex);
+        Matcher matcher = pattern.matcher(stringToSearch);
+        if (matcher.find()) {
+            symbolPosition = matcher.start();
+        }
+        return symbolPosition;
+    }
+    public int searchPlusSymbolPosition(String stringToSearch) {//TODO: it's ambitious
+        int firstMinusSymbolCorrection = stringToSearch.charAt(0) == '-' ? 1 : 0;
+        int symbolPosition = 0;
+        stringToSearch = stringToSearch.substring(firstMinusSymbolCorrection);
+        String regex = "[+-]";
+        Pattern pattern = Pattern.compile(regex);
+        Matcher matcher = pattern.matcher(stringToSearch);
+        if (matcher.find()) {
+            symbolPosition = matcher.start();
+        }
+        return symbolPosition+firstMinusSymbolCorrection;
     }
     public String searchSubstringForCalculations(String stringToSearch) {
         //TODO: unite
@@ -44,11 +65,11 @@ public class PositionSearch { //TODO: What do you mean? the "localization" word 
         Checking checking = new Checking();
         int start; //TODO: simplify the expression
         if (checking.checkHasMultiplySymbol(stringToSearch)) {
-            start = stringToSearch.indexOf('*');
-        } else if (checking.checkHasDivideSymbol(stringToSearch)){
-            start = stringToSearch.indexOf('/');
+            start = searchMultiplySymbolPosition(stringToSearch);
+        } else if (checking.checkHasDivideSymbol(stringToSearch)) {
+            start = searchDivideSymbolPosition(stringToSearch);
         } else {
-            start = searchPlusOrMinusSymbol(stringToSearch);
+            start = searchPlusSymbolPosition(stringToSearch);
         }
         if (checking.checkMathSymbolInSubstringIsFirstMathSymbol(stringToSearch)) {
             start = 0;
@@ -60,18 +81,17 @@ public class PositionSearch { //TODO: What do you mean? the "localization" word 
                 break;
             }
         }
-
         return start;
     }
     public int searchEndPositionForCalculations(String stringToSearch) {
         Checking checking = new Checking();
         int end; //TODO: simplify
         if (checking.checkHasMultiplySymbol(stringToSearch)) {
-            end = stringToSearch.indexOf('*');
+            end = searchMultiplySymbolPosition(stringToSearch);
         } else if (checking.checkHasDivideSymbol(stringToSearch)) {
-            end = stringToSearch.indexOf('/');
+            end = searchDivideSymbolPosition(stringToSearch);
         } else {
-            end = searchPlusOrMinusSymbol(stringToSearch);
+            end = searchPlusSymbolPosition(stringToSearch);
         }
         if (checking.checkMathSymbolInSubstringIsLastMathSymbol(stringToSearch)) {
             end = stringToSearch.length();
